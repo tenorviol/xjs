@@ -17,7 +17,7 @@ function serialize(foo) {
 		}, i);
 	}
 	
-	// TODO: one timeout to rule them all (aka cut them off)
+	// TODO: one timeout to rule them all (aka kill them all)
 }
 
 // TODO: formalize into a test
