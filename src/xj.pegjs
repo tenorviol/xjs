@@ -1,39 +1,64 @@
-start = ( tag / emptyTag / PCDATA )*
+xj = ( tag / emptyTag / PCDATA )*
 
-tag =
-	tag:openTag children:start closeTag
+tag
+	= tag:openTag children:xj closeName:closeTag
 	{
-		// TODO: check the open and close tags match
+		if (tag.name != closeName) {
+			throw 'tag mismatch';
+		}
 		return {
 			tag: tag.name,
+			attributes: tag.attributes,
 			children: children
-		}
+		};
 	}
 
-openTag =
-	'<' name:name '>'
+openTag
+	= '<' name:genericId attributes:attributes '>'
 	{
 		return {
-			name:name
-		}
+			name:name,
+			attributes:attributes
+		};
 	}
 
-closeTag = '</' name:name '>' { return name }
+closeTag = '</' name:genericId '>' { return name; }
 
-emptyTag =
-	'<' name:name '/>'
+emptyTag
+	= '<' name:genericId attributes:attributes '/>'
 	{
 		return {
-			tag:name
-		}
+			tag:name,
+			attributes:attributes
+		};
 	}
 
-PCDATA = pcdata:[^<]+ { return pcdata.join('') }
+attributes
+	= all:(whitespace+ name:genericId '=' value:attrValue)*
+	{
+		var attributes = {};
+		all.forEach(function(a) {
+			var key = a[1];
+			var value = a[3];
+			attributes[key] = value;
+		});
+		return attributes;
+	}
 
-name = first:namestart rest:(namechar)* { return first + rest.join("") }
+attrValue
+	= '"' value:[^"]* '"'  { return value.join(''); }
+	/ '\'' value:[^'] '\'' { return value.join(''); }
 
-namestart = letter / '_' / ':'
-namechar = letter / digit / '.' / '-' / '_' / ':'
+PCDATA
+	= pcdata:[^<]+
+	{ return pcdata.join(''); }
+
+genericId
+	= first:idStart rest:(nameChar)*
+	{ return first + rest.join(""); }
+
+idStart = letter / [_:]
+nameChar = letter / digit / [-_.:]
 
 whitespace = [ \t\r\n\u000C]
 letter = [a-zA-Z]

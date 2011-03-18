@@ -1,15 +1,3 @@
-/*
-var Scanner = require('../lib/Scanner.js');
-
-exports.testOnlyText = function(test) {
-	var text = 'foo\n\tfunction bar()';
-	var s = new Scanner('foo');
-	s.
-	console.log(scan);
-};
-
-*/
-
 var xj = require('../lib/xj.js');
 
 exports.testParse = function(test) {
@@ -19,10 +7,12 @@ exports.testParse = function(test) {
 		[
 			{
 				tag:'t',
+				attributes:{},
 				children:[
 					'Starting text inside t',
 					{
 						tag:'t1',
+						attributes:{},
 						children:[
 							'Text inside t1'
 						]
@@ -31,5 +21,33 @@ exports.testParse = function(test) {
 			}
 		]
 	);
+	test.done();
+};
+
+exports.testParseAttributes = function(test) {
+	var input = '<div id="foo" class="bar">Fubar!</div>';
+	var result = xj.parse(input);
+	test.deepEqual(result,
+		[
+			{
+				tag:'div',
+				attributes:{
+					id:'foo',
+					'class':'bar'
+				},
+				children:[
+					'Fubar!'
+				]
+			}
+		]
+	);
+	test.done();
+};
+
+exports.testMismatchedTagThrows = function(test) {
+	test['throws'](function() {
+		var input = '<h1>Great Title</h2>';
+		xj.parse(input);
+	});
 	test.done();
 };
