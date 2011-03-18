@@ -10,15 +10,9 @@ exports.testOnlyText = function(test) {
 
 */
 
-var org = require('../src/antlr3-all');
-var xj = require('../src/xjLexer.js');
+var xj = require('../lib/xj.js');
 
-var input = '<t>Starting text inside t<t1>Text inside t1</t1></t>',
-	cstream = new org.antlr.runtime.ANTLRStringStream(input),
-	lexer = new xj.xjLexer(cstream),
-	tstream = new org.antlr.runtime.CommonTokenStream(lexer);
+var input = '<t>Starting text inside t<t1>Text inside t1</t1></t>';
 
-print(tstream.nextToken());
-while (token = tstream.nextToken()) {
-	console.log(token);
-}
+var result = xj.parse(input);
+console.log(result);
