@@ -1,8 +1,8 @@
-lib/xj.js : src/xj.pegjs
-	pegjs src/xj.pegjs lib/xj.js
+lib/compile.js : src/compile.pegjs
+	pegjs src/compile.pegjs lib/compile.js
 
 test: testNodeunit
 
 testNodeunit:
 	nodeunit test/orderizeTest.js
-	nodeunit test/xjTest.js
+	nodeunit test/compileTest.js
