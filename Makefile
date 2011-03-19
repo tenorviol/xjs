@@ -1,8 +1,8 @@
-lib/compile.js : src/compile.pegjs
-	pegjs src/compile.pegjs lib/compile.js
+lib/parser.js : src/parser.pegjs
+	pegjs src/parser.pegjs lib/parser.js
 
 test: testNodeunit
 
 testNodeunit:
 	nodeunit test/orderizeTest.js
-	nodeunit test/compileTest.js
+	nodeunit test/parserTest.js
