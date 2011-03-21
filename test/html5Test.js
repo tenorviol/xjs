@@ -1,17 +1,25 @@
-var Tag = require('../lib/html5.js').Tag;
+var html = require('../lib/html5.js');
 
 var tagTests = [
 	[
 		'<div></div>',
-		new Tag('div')
+		new html.Tag('div')
 	],
 	[
 		'<div id="foo"></div>',
-		new Tag('div', { id:'foo' })
+		new html.Tag('div', { id:'foo' })
 	],
 	[
 		'<div id="foo &amp; &quot;bar&quot;" class="&lt;fubar!&gt;"></div>',
-		new Tag('div', { id:'foo & "bar"', 'class':'<fubar!>' })
+		new html.Tag('div', { id:'foo & "bar"', 'class':'<fubar!>' })
+	],
+	[
+		'm = n &lt; o &amp; p',
+		new html.PCDATA('m = n < o & p')
+	],
+	[
+		'<![CDATA[<sender>John Smith</sender>]]>',
+		new html.CDATA('<sender>John Smith</sender>')
 	]
 ];
 
