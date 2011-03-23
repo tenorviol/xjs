@@ -1,4 +1,5 @@
-var html = require('../lib/html5.js');
+var html = require('../lib/html5.js'),
+	vm = require('vm');
 
 var tagTests = [
 	[
@@ -33,4 +34,3 @@ tagTests.forEach(function(test) {
 		});
 	};
 });
-
