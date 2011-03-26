@@ -1,49 +1,51 @@
 var parser = require('../lib/parser.js'),
 	xj = require('../lib/xj.js');
 
-exports.testParse = function(test) {
-	var input = '<t>Starting text inside t<t1>Text inside t1</t1></t>';
-	var result = parser.parse(input);
-	test.deepEqual(result,
-		[
-			{
-				tag:'t',
-				attributes:{},
-				children:[
-					'Starting text inside t',
-					{
-						tag:'t1',
-						attributes:{},
-						children:[
-							'Text inside t1'
-						]
-					}
-				]
-			}
-		]
-	);
-	test.done();
-};
 
-exports.testParseAttributes = function(test) {
-	var input = '<div id="foo" class="bar">Fubar!</div>';
-	var result = parser.parse(input);
-	test.deepEqual(result,
-		[
-			{
-				tag:'div',
-				attributes:{
-					id:'foo',
-					'class':'bar'
-				},
-				children:[
-					'Fubar!'
-				]
-			}
-		]
-	);
-	test.done();
-};
+var tests = [
+	{
+		input: '<t>Starting text inside t<t1>Text inside t1</t1></t>',
+		expected: [{
+			type:'tag',
+			name:'t',
+			attributes:{},
+			children:[
+				{ type:'pcdata', pcdata:'Starting text inside t' },
+				{
+					type:'tag',
+					name:'t1',
+					attributes:{},
+					children:[
+						{ type:'pcdata', pcdata:'Text inside t1' }
+					]
+				}
+			]
+		}]
+	},
+	{
+		input: '<div id="foo" class="bar">Fubar!</div>',
+		expected: [{
+			type:'tag',
+			name:'div',
+			attributes:{
+				id:'foo',
+				'class':'bar'
+			},
+			children:[
+				{ type:'pcdata', pcdata:'Fubar!' }
+			]
+		}]
+	}
+];
+
+
+tests.forEach(function(test) {
+	exports['test parse '+test.input] = function(assert) {
+		var result = parser.parse(test.input);
+		assert.deepEqual(test.expected, result);
+		assert.done();
+	};
+});
 
 exports.testMismatchedTagThrows = function(test) {
 	test['throws'](function() {

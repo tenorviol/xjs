@@ -1,14 +1,15 @@
 xj = ( tag / emptyTag / PCDATA )*
 
 tag
-	= tag:openTag children:xj closeName:closeTag
+	= open:openTag children:xj close:closeTag
 	{
-		if (tag.name != closeName) {
+		if (open.name != close.name) {
 			throw 'tag mismatch';
 		}
 		return {
-			tag: tag.name,
-			attributes: tag.attributes,
+			type: 'tag',
+			name: open.name,
+			attributes: open.attributes,
 			children: children
 		};
 	}
@@ -22,14 +23,19 @@ openTag
 		};
 	}
 
-closeTag = '</' name:genericId '>' { return name; }
+closeTag
+	= '</' name:genericId '>'
+	{
+		return { name:name };
+	}
 
 emptyTag
 	= '<' name:genericId attributes:attributes '/>'
 	{
 		return {
-			tag:name,
-			attributes:attributes
+			type: 'tag',
+			name: name,
+			attributes: attributes
 		};
 	}
 
@@ -37,9 +43,9 @@ attributes
 	= all:(whitespace+ name:genericId '=' value:attrValue)*
 	{
 		var attributes = {};
-		all.forEach(function(a) {
-			var key = a[1];
-			var value = a[3];
+		all.forEach(function(attribute) {
+			var key = attribute[1];
+			var value = attribute[3];
 			attributes[key] = value;
 		});
 		return attributes;
@@ -51,15 +57,25 @@ attrValue
 
 PCDATA
 	= pcdata:[^<]+
-	{ return pcdata.join(''); }
+	{
+		return {
+			type: 'pcdata',
+			pcdata: pcdata.join('')
+		};
+	}
 
 genericId
 	= first:idStart rest:(nameChar)*
-	{ return first + rest.join(""); }
+	{
+		return first + rest.join("");
+	}
 
 idStart = letter / [_:]
+
 nameChar = letter / digit / [-_.:]
 
 whitespace = [ \t\r\n\u000C]
+
 letter = [a-zA-Z]
+
 digit = [0-9]
