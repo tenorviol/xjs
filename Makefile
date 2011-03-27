@@ -6,3 +6,4 @@ test: testNodeunit
 testNodeunit:
 	nodeunit test/orderizeTest.js
 	nodeunit test/parserTest.js
+	nodeunit test/xjTest.js
