@@ -21,3 +21,7 @@ assert.equal(18, eighteen());
 // but changing the values in the scope has no effect?
 context.six = 9;
 assert.notEqual(21, eighteen());
+
+var bracketedScript = vm.createScript('{foo}');
+var result = bracketedScript.runInNewContext({foo:'Fubar!'});
+assert.equal('Fubar!', result);
