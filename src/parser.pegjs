@@ -54,6 +54,22 @@ attributes
 attrValue
 	= '"' value:[^"]* '"'  { return value.join(''); }
 	/ '\'' value:[^'] '\'' { return value.join(''); }
+	/ script
+
+script
+	= text:codeBlock
+	{
+		return {
+			type:'script',
+			text:text
+		};
+	}
+
+codeBlock
+	= '{' inner:([^{}]+ / codeBlock )* '}'
+	{
+		return '{' + inner[0].join('') + '}';
+	}
 
 PCDATA
 	= pcdata:[^<]+

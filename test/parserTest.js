@@ -35,6 +35,22 @@ var tests = [
 				{ type:'pcdata', pcdata:'Fubar!' }
 			]
 		}]
+	},
+	{
+		input: '<div id={foo}>bar</div>',
+		expected: [{
+			type:'tag',
+			name:'div',
+			attributes:{
+				id:{
+					type:'script',
+					text:'{foo}'
+				}
+			},
+			children:[
+				{ type:'pcdata', pcdata:'bar' }
+			]
+		}]
 	}
 ];
 
