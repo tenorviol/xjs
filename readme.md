@@ -1,7 +1,9 @@
 xj
 ==
 
-Something wonderful
+Something wonderful...
+
+Or just another template language
 
 Some goals
 ----------
@@ -12,23 +14,24 @@ Some goals
 4. Inline code blocks, which can contain inline xj
 5. Custom tag creation, with asynchronous tag behavior
 6. Template scope variables
+7. Invasive modification of all (incl. CDATA sections)
 
 Examples
 --------
 
-Echo (html escaped)
+### Echo (html escaped)
 
 	{{'Hello world! < J.R.R. Tolkein'}}
 	
 	// Output: Hello world! &lt; J.R.R. Tolkein
 
-Tags
+### Tags
 
 	<div id={{foo}} class="foo">{{bar('Fubar!')}}</div>
 	
 	// Output: <div id="value of foo" class="foo">return value of bar</div>
 
-Inline xj
+### Inline xj
 
 	<div id="page">
 	{{
@@ -43,7 +46,7 @@ Inline xj
 	// Output 1: <div id="page"><div>value of foo</div></div>
 	// Output 2: <div id="page"><div>bar</div></div>
 
-Scope
+### Template scope
 
 	{{
 		var QS = require('querystring')
@@ -52,3 +55,18 @@ Scope
 	<a href={{ '/link?' + QS.stringify(q) }}>click me</a>
 	
 	// Output: <a href="/link?foo=bar">click me</a>
+
+### Script modification and output
+
+	<script>
+	// <![CDATA[
+		console.log({{JSON.stringify(foo)}});
+	// ]]>
+	</script>
+	
+	/* Output:
+		<script>
+		// <![CDATA[
+			console.log("value of foo");
+		// ]]>
+	*/
