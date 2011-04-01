@@ -11,6 +11,7 @@ Some goals
 3. Informed html output
 4. Inline code blocks, which can contain inline xj
 5. Custom tag creation, with asynchronous tag behavior
+6. Template scope variables
 
 Examples
 --------
@@ -41,3 +42,13 @@ Inline xj
 	
 	// Output 1: <div id="page"><div>value of foo</div></div>
 	// Output 2: <div id="page"><div>bar</div></div>
+
+Scope
+
+	{{
+		var QS = require('querystring')
+		var q = { foo:'bar' };
+	}}
+	<a href={{ '/link?' + QS.stringify(q) }}>click me</a>
+	
+	// Output: <a href="/link?foo=bar">click me</a>
