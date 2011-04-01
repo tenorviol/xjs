@@ -1,4 +1,8 @@
-xj = ( tag / emptyTag / PCDATA )*
+{
+  var vm = require('vm');
+}
+
+xj = ( tag / emptyTag / PCDATA / script )*
 
 tag
 	= open:openTag children:xj close:closeTag
@@ -57,12 +61,14 @@ attrValue
 	/ script
 
 script
-	= text:codeBlock
+	= source:codeBlock
 	{
-		return {
-			type:'script',
-			text:text
-		};
+		var script = vm.createScript(source);
+		return (function(script) {
+			return function(context) {
+				return script.runInNewContext(context);
+			};
+		})(script);
 	}
 
 codeBlock
@@ -72,7 +78,7 @@ codeBlock
 	}
 
 PCDATA
-	= pcdata:[^<]+
+	= pcdata:[^<{]+
 	{
 		return {
 			type: 'pcdata',
