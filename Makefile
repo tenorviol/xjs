@@ -1,9 +1,8 @@
 lib/parser.js : src/parser.pegjs
 	pegjs src/parser.pegjs lib/parser.js
 
-test: testNodeunit
+test: nodeunit
 
-testNodeunit:
-	nodeunit test/orderizeTest.js
-	nodeunit test/parserTest.js
-	nodeunit test/xjTest.js
+nodeunit:
+	nodeunit test/StringStreamTest.js
+	nodeunit test/AsyncStreamTest.js

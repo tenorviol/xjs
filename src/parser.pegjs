@@ -1,103 +1,96 @@
-{
-  var vm = require('vm');
-}
+xjs
+  = code:(code / tag)*
+  {
+    return code.join('')
+      + 'response.end();\n';
+  }
 
-xj = ( tag / emptyTag / PCDATA / script )*
+
+// xml
 
 tag
-	= open:openTag children:xj close:closeTag
-	{
-		if (open.name != close.name) {
-			throw 'tag mismatch';
-		}
-		return {
-			type: 'tag',
-			name: open.name,
-			attributes: open.attributes,
-			children: children
-		};
-	}
+  = open:openTag children:xjs close:closeTag
+  {
+    if (open.name != close.name) {
+      throw 'tag mismatch';
+    }
+    return 'xjs.tag(response,'
+      + JSON.stringify(open.name) + ','
+      + JSON.stringify(open.attributes) + ','
+      + 'function(response){\n'
+      + children
+      + '})\n';
+  }
 
 openTag
-	= '<' name:genericId attributes:attributes '>'
-	{
-		return {
-			name:name,
-			attributes:attributes
-		};
-	}
+  = '<' name:genericId attributes:attributes '>'
+  {
+    return {
+      name:name,
+      attributes:attributes
+    };
+  }
 
 closeTag
-	= '</' name:genericId '>'
-	{
-		return { name:name };
-	}
+  = '</' name:genericId '>'
+  {
+    return { name:name };
+  }
 
 emptyTag
-	= '<' name:genericId attributes:attributes '/>'
-	{
-		return {
-			type: 'tag',
-			name: name,
-			attributes: attributes
-		};
-	}
+  = '<' name:genericId attributes:attributes '/>'
+  {
+    return {
+      type: 'tag',
+      name: name,
+      attributes: attributes
+    };
+  }
 
 attributes
-	= all:(whitespace+ name:genericId '=' value:attrValue)*
-	{
-		var attributes = {};
-		all.forEach(function(attribute) {
-			var key = attribute[1];
-			var value = attribute[3];
-			attributes[key] = value;
-		});
-		return attributes;
-	}
+  = all:(whitespace+ name:genericId '=' value:attrValue)*
+  {
+    var attributes = {};
+    all.forEach(function(attribute) {
+      var key = attribute[1];
+      var value = attribute[3];
+      attributes[key] = value;
+    });
+    return attributes;
+  }
 
 attrValue
-	= '"' value:[^"]* '"'  { return value.join(''); }
-	/ '\'' value:[^'] '\'' { return value.join(''); }
-	/ script
-
-script
-	= source:codeBlock
-	{
-		var script = vm.createScript(source);
-		return (function(script) {
-			return function(context) {
-				return script.runInNewContext(context);
-			};
-		})(script);
-	}
-
-codeBlock
-	= '{' inner:([^{}]+ / codeBlock )* '}'
-	{
-		return '{' + inner[0].join('') + '}';
-	}
-
-PCDATA
-	= pcdata:[^<{]+
-	{
-		return {
-			type: 'pcdata',
-			pcdata: pcdata.join('')
-		};
-	}
+  = '"' value:[^"]* '"'  { return value.join(''); }
+  / '\'' value:[^'] '\'' { return value.join(''); }
 
 genericId
-	= first:idStart rest:(nameChar)*
-	{
-		return first + rest.join("");
-	}
+  = first:idStart rest:(nameChar)*
+  {
+    return first + rest.join("");
+  }
 
-idStart = letter / [_:]
+idStart = [_:a-zA-Z]
 
-nameChar = letter / digit / [-_.:]
+nameChar = [-_.:a-zA-Z0-9]
 
 whitespace = [ \t\r\n\u000C]
 
-letter = [a-zA-Z]
 
-digit = [0-9]
+// javascript
+
+code
+  = '{{' write:'='? js:javascript '}}'
+  {
+    if (write) {
+      return 'response.write(xjs.escapeHtml('+js+'));\n';
+    } else {
+      return js+'\n';
+    }
+  }
+
+// TODO: better source parsing
+javascript
+  = js:[^{}]*
+  {
+    return js.join('');
+  }
