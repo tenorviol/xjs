@@ -15,6 +15,7 @@ Some goals
 5. Custom tag creation, with asynchronous tag behavior
 6. Template scope variables
 7. Invasive modification of all (incl. CDATA sections)
+8. External template invocation
 
 Examples
 --------
@@ -69,4 +70,7 @@ Examples
 		// <![CDATA[
 			console.log("value of foo");
 		// ]]>
+		</script>
 	*/
+
+### External template invocation
