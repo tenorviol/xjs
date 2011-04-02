@@ -25,23 +25,23 @@ exports['test async callback'] = function(test) {
 	stream.write(1);
 	stream.async(function(callback) {
 		setTimeout(function() {
-			callback('foo');
+			callback(' foo ');
 		}, 20);
 	});
 	stream.write(2);
 	stream.async(function(callback) {
 		setTimeout(function() {
-			callback('bar');
+			callback(' bar ');
 		}, 5);
 	});
 	stream.write(3);
 	stream.async(function(callback) {
-		callback('fubar');
+		callback(' fubar ');
 	});
 	stream.end(4);
 	
 	result.on('end', function() {
-		test.equal('1foo2bar3fubar4', result.toString());
+		test.equal('1 foo 2 bar 3 fubar 4', result.toString());
 		test.done();
 	});
 };
@@ -74,5 +74,41 @@ exports['test kill async'] = function(test) {
 	result.on('end', function() {
 		test.equal('barfubar', result.toString());
 		test.done();
+	});
+};
+
+exports['test async stream'] = function(assert) {
+	var stream = new AsyncStream();
+	var result = new StringStream();
+	stream.pipe(result);
+	
+	stream.write(1);
+	stream.async(function(callback) {
+		setTimeout(function() {
+			callback('foo');
+		}, 20);
+	});
+	
+	stream.write(2);
+	var substream = stream.substream();
+	
+	stream.write(3);
+	stream.async(function(callback) {
+		setTimeout(function() {
+			callback('bar');
+		}, 5);
+	});
+	
+	substream.write('|2.1');
+	substream.async(function(callback) {
+		callback('fubar');
+	});
+	substream.end('2.2|');
+	
+	stream.end(4);
+	
+	result.on('end', function() {
+		assert.equal('1foo2|2.1fubar2.2|3bar4', result.toString());
+		assert.done();
 	});
 };
