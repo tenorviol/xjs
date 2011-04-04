@@ -90,7 +90,7 @@ exports['test async stream'] = function(assert) {
 	});
 	
 	stream.write(2);
-	var substream = stream.substream();
+	var asyncStream = stream.asyncStream();
 	
 	stream.write(3);
 	stream.async(function(callback) {
@@ -99,11 +99,11 @@ exports['test async stream'] = function(assert) {
 		}, 5);
 	});
 	
-	substream.write('|2.1');
-	substream.async(function(callback) {
+	asyncStream.write('|2.1');
+	asyncStream.async(function(callback) {
 		callback('fubar');
 	});
-	substream.end('2.2|');
+	asyncStream.end('2.2|');
 	
 	stream.end(4);
 	

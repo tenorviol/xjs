@@ -9,16 +9,16 @@ xjs
 // xml
 
 tag
-  = open:openTag children:xjs close:closeTag
+  = open:openTag childScope:xjs close:closeTag
   {
     if (open.name != close.name) {
       throw 'tag mismatch';
     }
-    return 'xjs.tag(response,'
-      + JSON.stringify(open.name) + ','
+    return 'xjs.tag(response,"'
+      + open.name + '",'
       + JSON.stringify(open.attributes) + ','
       + 'function(response){\n'
-      + children
+      + childScope
       + '})\n';
   }
 
