@@ -9,7 +9,10 @@ var tests = [
 	},
 	{
 		xjs: '{{=foo}}{{=bar()}}',
-		context: { foo:'Hello ', bar:world },
+		context: {
+			foo:'Hello ',
+			bar:function() { return 'world!'; }
+		},
 		expect: 'Hello world!'
 	},
 	{
@@ -30,10 +33,6 @@ var tests = [
 		expect: process.version
 	}
 ];
-
-function world() {
-	return 'world!';
-}
 
 tests.forEach(function(test) {
 	exports['script ' + test.xjs] = function(assert) {
