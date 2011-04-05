@@ -1,15 +1,21 @@
 xjs
-  = code:(code / tag)*
+  = elements:elements
   {
-    return code.join('')
+    return elements
       + 'response.end();\n';
   }
 
 
+elements
+  = code:(code / tag)*
+  {
+    return code.join('');
+  }
+
 // xml
 
 tag
-  = open:openTag childScope:xjs close:closeTag
+  = open:openTag childScope:elements close:closeTag
   {
     if (open.name != close.name) {
       throw 'tag mismatch';
