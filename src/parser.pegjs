@@ -25,7 +25,7 @@ tag
     if (open.name != close.name) {
       throw 'tag mismatch';
     }
-    return 'writeTag(response,"'
+    return 'xjs.writeTag(response,"'
       + open.name + '",'
       + JSON.stringify(open.attributes) + ','
       + 'function(response){\n'
@@ -93,7 +93,7 @@ code
   = '{{' write:'='? js:javascript '}}'
   {
     if (write) {
-      return 'response.write(escapeHtml('+js+'));';
+      return 'response.write(xjs.escapeHtml('+js+'));';
     } else {
       return js+'';
     }
