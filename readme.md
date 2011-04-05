@@ -1,34 +1,30 @@
-xj
-==
+xjs
+===
 
-Something wonderful...
-
-Or just another template language
+xml javascript templates for node.js
 
 Some goals
 ----------
 
-1. No new languages. Templates expressed as xml/Javascript
-2. Enforce good balanced markup
-3. Informed html output
-4. Inline code blocks, which can contain inline xj
-5. Custom tag creation, with asynchronous tag behavior
-6. Template scope variables
-7. Invasive modification of all (incl. CDATA sections)
-8. External template invocation
+1. No new languages. Templates are expressed as xml and javascript.
+2. Enforce balanced xml markup.
+3. Good error reporting, including invalid html/xml.
+4. Inline javascript blocks, which can themselves contain inline xjs.
+5. Custom tags, with optional asynchronous rendering.
+6. Template scope variables.
 
 Examples
 --------
 
 ### Echo (html escaped)
 
-	{{'Hello world! < J.R.R. Tolkein'}}
+	{{= 'Hello world! < J.R.R. Tolkein' }}
 	
 	// Output: Hello world! &lt; J.R.R. Tolkein
 
 ### Tags
 
-	<div id={{foo}} class="foo">{{bar('Fubar!')}}</div>
+	<div id={foo} class="foo">{{= bar('Fubar!') }}</div>
 	
 	// Output: <div id="value of foo" class="foo">return value of bar</div>
 
@@ -36,11 +32,13 @@ Examples
 
 	<div id="page">
 	{{
+		var template;
 		if (foo) {
-			<div>{{foo}}</div>
+			template = <div>{{foo}}</div>
 		} else {
-			<div>bar</div>
+			template = <div>bar</div>
 		}
+		template.render(response);
 	}}
 	</div>
 	
@@ -53,7 +51,7 @@ Examples
 		var QS = require('querystring')
 		var q = { foo:'bar' };
 	}}
-	<a href={{ '/link?' + QS.stringify(q) }}>click me</a>
+	<a href={ '/link?' + QS.stringify(q) }>click me</a>
 	
 	// Output: <a href="/link?foo=bar">click me</a>
 
@@ -61,7 +59,7 @@ Examples
 
 	<script>
 	// <![CDATA[
-		console.log({{JSON.stringify(foo)}});
+		console.log({{= JSON.stringify(foo) }});
 	// ]]>
 	</script>
 	
@@ -72,5 +70,3 @@ Examples
 		// ]]>
 		</script>
 	*/
-
-### External template invocation
