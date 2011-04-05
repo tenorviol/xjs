@@ -24,6 +24,10 @@ var tests = [
 	{
 		xjs: '{{= require("querystring").stringify({ foo:"bar"} ) }}',
 		expect: 'foo=bar'
+	},
+	{
+		xjs: '{{= process.version }}{{ console.log("testing console ") }}',
+		expect: process.version
 	}
 ];
 
