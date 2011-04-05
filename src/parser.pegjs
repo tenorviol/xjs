@@ -1,15 +1,20 @@
 xjs
   = elements:elements
   {
-    return elements
-      + 'response.end();\n';
+    return [
+      'module.exports = function(response, context) {',
+      '  with(context) {',
+      elements,
+      '    response.end();',
+      '  }',
+      '}'].join('\n');
   }
 
 
 elements
   = code:(code / tag)*
   {
-    return code.join('');
+    return code.join('\n');
   }
 
 // xml
@@ -20,12 +25,12 @@ tag
     if (open.name != close.name) {
       throw 'tag mismatch';
     }
-    return 'xjs.tag(response,"'
+    return 'writeTag(response,"'
       + open.name + '",'
       + JSON.stringify(open.attributes) + ','
       + 'function(response){\n'
       + childScope
-      + '})\n';
+      + '})';
   }
 
 openTag
@@ -88,9 +93,9 @@ code
   = '{{' write:'='? js:javascript '}}'
   {
     if (write) {
-      return 'response.write(xjs.escapeHtml('+js+'));\n';
+      return 'response.write(escapeHtml('+js+'));';
     } else {
-      return js+'\n';
+      return js+'';
     }
   }
 

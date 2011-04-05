@@ -20,6 +20,10 @@ var tests = [
 	{
 		xjs: '{{foo="bar"}}<div>{{=foo}}</div>',
 		expect: '<div>bar</div>'
+	},
+	{
+		xjs: '{{= require("querystring").stringify({ foo:"bar"} ) }}',
+		expect: 'foo=bar'
 	}
 ];
 
@@ -30,7 +34,7 @@ function world() {
 tests.forEach(function(test) {
 	exports['script ' + test.xjs] = function(assert) {
 		test.context = test.context || {};
-		var response = test.context.response = new StringStream();
+		var response = new StringStream();
 		
 		response.on('end', function() {
 			assert.equal(test.expect, response.toString());
@@ -38,6 +42,6 @@ tests.forEach(function(test) {
 		});
 		
 		var script = xjs.parse(test.xjs);
-		script.run( test.context );
+		script.render( response, test.context );
 	};
 });
