@@ -1,42 +1,31 @@
 xjs
   = elements:elements
-  {
-    return [
-      'module.exports = function(response, context) {',
-      '  with(context) {',
-      elements,
-      '    response.end();',
-      '  }',
-      '}'].join('\n');
-  }
-
 
 elements
-  = code:(code / tag)*
-  {
-    return code.join('\n');
-  }
+  = (code / tag)*
 
 // xml
 
 tag
-  = open:openTag childScope:elements close:closeTag
+  = open:openTag children:elements close:closeTag
   {
     if (open.name != close.name) {
       throw 'tag mismatch';
     }
-    return '__xjs.writeTag(response,"'
-      + open.name + '",'
-      + JSON.stringify(open.attributes) + ','
-      + 'function(response){\n'
-      + childScope
-      + '})';
+    return {
+      type:'tag',
+      open:open,
+      children:children,
+      close:close
+    };
   }
 
 openTag
   = '<' name:genericId attributes:attributes '>'
   {
     return {
+      start:'<'+name,
+      end:'>',
       name:name,
       attributes:attributes
     };
@@ -45,7 +34,10 @@ openTag
 closeTag
   = '</' name:genericId '>'
   {
-    return { name:name };
+    return {
+      source:'</' + name + '>',
+      name:name
+    };
   }
 
 emptyTag
@@ -59,16 +51,16 @@ emptyTag
   }
 
 attributes
-  = all:(whitespace+ name:genericId '=' value:attrValue)*
-  {
-    var attributes = {};
-    all.forEach(function(attribute) {
-      var key = attribute[1];
-      var value = attribute[3];
-      attributes[key] = value;
-    });
-    return attributes;
-  }
+  = attributes:(
+    w:whitespace+ name:genericId '=' value:attrValue
+    {
+      return {
+        source: w + name + '=',
+        name:name,
+        value:value
+      }
+    }
+  )*
 
 attrValue
   = '"' value:[^"]* '"'  { return value.join(''); }
@@ -92,10 +84,10 @@ whitespace = [ \t\r\n\u000C]
 code
   = '{{' write:'='? js:javascript '}}'
   {
-    if (write) {
-      return 'response.write(__xjs.escapeHtml('+js+'));';
-    } else {
-      return js+'';
+    return {
+      type: write ? 'write' : 'script',
+      source: '{{' + write + js + '}}',
+      script: js
     }
   }
 
