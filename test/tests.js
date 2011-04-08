@@ -1,6 +1,7 @@
 
 module.exports = [
 
+  // write block using passed-in local variable
   {
     source: '{{=foo}}',
     parse: [ { type:'write', source:'{{=foo}}', script:'foo' } ],
@@ -8,6 +9,8 @@ module.exports = [
     render: 'bar'
   },
 
+  // 'Hello world!'
+  // wth write block calling passed-in function
   {
     source: '{{=foo}}{{=bar()}}',
     parse: [
@@ -21,6 +24,7 @@ module.exports = [
     render: 'Hello world!'
   },
 
+  // write block with semicolon
   {
     source: '{{= fubar; }}',
     parse: [ { type:'write', source:'{{= fubar; }}', script:' fubar; ' } ],
@@ -28,6 +32,8 @@ module.exports = [
     render: '&lt;&gt;&quot;&amp;'
   },
 
+  // simple tag test
+  // using in-template variable assignment
   {
     source: '{{ var foo = "bar"; }}<div>{{= foo }}</div>',
     parse: [
@@ -48,25 +54,38 @@ module.exports = [
     render: '<div>bar</div>'
   },
 
+  // checking access to typical node.js globals
+  // i.e. process, console, require
   {
-    source: '{{= require("querystring").stringify({ foo:"bar" }) }}',
+    source: '{{ var qs = require("querystring"); }}'
+          + '{{= qs.stringify({ foo:"bar" }) }}'
+          + '{{= process.version;;; }}'
+          + '{{= console.log ? true : false }}',
     parse: [
-      {
-        type: 'write',
-        source: '{{= require("querystring").stringify({ foo:"bar" }) }}',
-        script: ' require("querystring").stringify({ foo:"bar" }) '
-      }
-    ],
-    render: 'foo=bar'
-  },
-
-  {
-    source: '{{= process.version }}{{= console.log ? true : false }}',
-    parse: [
-      { type: 'write', source: '{{= process.version }}', script: ' process.version ' },
+      { type: 'script', source: '{{ var qs = require("querystring"); }}', script: ' var qs = require("querystring"); '},
+      { type: 'write', source: '{{= qs.stringify({ foo:"bar" }) }}', script: ' qs.stringify({ foo:"bar" }) '},
+      { type: 'write', source: '{{= process.version;;; }}', script: ' process.version;;; ' },
       { type: 'write', source: '{{= console.log ? true : false }}', script: ' console.log ? true : false ' }
     ],
-    render: process.version + 'true'
-  }
+    render: 'foo=bar' + process.version + 'true'
+  },
 
+  // null and undefined are javascript's non-objects
+  // they have no properties and will not be written
+  {
+    source: '{{= undefined }}{{= null }}',
+    parse: [
+      { type: 'write', source: '{{= undefined }}', script: ' undefined ' },
+      { type: 'write', source: '{{= null }}', script: ' null ' }
+    ],
+    render: ''
+  },
+
+  // writing a function should not dump code automatically
+  {
+    source: '{{=func}}',
+    parse: [ { type:'write', source:'{{=func}}', script:'func' } ],
+    locals: { func:function() { return very_secure_code; } },
+    render: '[Function]'
+  }
 ];
