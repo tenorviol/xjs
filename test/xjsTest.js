@@ -4,16 +4,8 @@ var xjs = require('../lib/xjs'),
 
 var tests = [
 
-  // write block using passed-in local variable
-  {
-    source: '{{=foo}}',
-    parse: [ { type:'write', source:'{{=foo}}', script:'foo' } ],
-    locals: { foo:'bar' },
-    render: 'bar'
-  },
-
   // 'Hello world!'
-  // wth write block calling passed-in function
+  // with write block calling passed-in function
   {
     source: '{{=foo}}{{=bar()}}',
     parse: [
@@ -27,7 +19,7 @@ var tests = [
     render: 'Hello world!'
   },
 
-  // write block with semicolon
+  // write block with trailing semicolon
   {
     source: '{{= fubar; }}',
     parse: [ { type:'write', source:'{{= fubar; }}', script:' fubar; ' } ],
@@ -35,7 +27,7 @@ var tests = [
     render: '&lt;&gt;&quot;&amp;'
   },
 
-  // simple tag test
+  // simple tag
   // using in-template variable assignment
   {
     source: '{{ var foo = "bar"; }}<div>{{= foo }}</div>',
