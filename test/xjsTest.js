@@ -1,5 +1,9 @@
+var xjs = require('../lib/xjs'),
+    parser = require('../lib/parser'),
+    tests = require('./sourceTests');
 
-module.exports = [
+
+var tests = [
 
   // write block using passed-in local variable
   {
@@ -82,6 +86,7 @@ module.exports = [
   },
 
   // writing a function should not dump code automatically
+  // to dump code, call the function's toString() method
   {
     source: '{{=func}}',
     parse: [ { type:'write', source:'{{=func}}', script:'func' } ],
@@ -89,3 +94,22 @@ module.exports = [
     render: '[Function]'
   }
 ];
+
+
+tests.forEach(function(test) {
+
+  exports['parse '+test.source] = function(assert) {
+    var result = parser.parse(test.source);
+    assert.deepEqual(test.parse, result);
+    assert.done();
+  };
+
+  exports['render ' + test.source] = function(assert) {
+    var template = xjs.parse(test.source);
+    template.render(test.locals, function(result) {
+      assert.equal(test.render, result);
+      assert.done();
+    });
+  };
+
+});

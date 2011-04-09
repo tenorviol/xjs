@@ -6,6 +6,4 @@ test: nodeunit
 nodeunit:
 	nodeunit test/StringStreamTest.js
 	nodeunit test/AsyncStreamTest.js
-	nodeunit test/testParse.js
-	nodeunit test/testRender.js
-	nodeunit test/testFileRender.js
+	nodeunit test/xjsTest.js
