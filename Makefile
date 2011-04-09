@@ -8,3 +8,4 @@ nodeunit:
 	nodeunit test/AsyncStreamTest.js
 	nodeunit test/testParse.js
 	nodeunit test/testRender.js
+	nodeunit test/testFileRender.js

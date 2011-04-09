@@ -1,5 +1,5 @@
 var parser = require('../lib/parser'),
-    tests = require('./tests');
+    tests = require('./sourceTests');
 
 tests.forEach(function(test) {
 

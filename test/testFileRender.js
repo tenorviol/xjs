@@ -1,10 +1,11 @@
 var xjs = require('../lib/xjs'),
-    tests = require('./sourceTests');
+    tests = require('./fileTests');
 
 tests.forEach(function(test) {
   
-  exports['render ' + test.source] = function(assert) {
-    var template = xjs.parse(test.source);
+  exports['render ' + test.filename] = function(assert) {
+    console.log(test.filename);
+    var template = require(test.filename);
     template.render(test.locals, function(result) {
       assert.equal(test.render, result);
       assert.done();
