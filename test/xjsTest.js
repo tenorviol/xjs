@@ -1,6 +1,5 @@
 var xjs = require('../lib/xjs'),
-    parser = require('../lib/parser'),
-    tests = require('./sourceTests');
+    parser = require('../lib/parser');
 
 
 var tests = [
