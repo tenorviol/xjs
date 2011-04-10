@@ -67,6 +67,7 @@ XmlAttributes
     w:whitespace+ name:XmlGenericId '=' value:XmlAttributeValue
     {
       return {
+        type:'attribute',
         source: w + name + '=',
         name:name,
         value:value
@@ -77,6 +78,14 @@ XmlAttributes
 XmlAttributeValue
   = '"' value:[^"]* '"'  { return value.join(''); }
   / '\'' value:[^'] '\'' { return value.join(''); }
+  / '{' expression:javascript '}'
+    {
+      return {
+        type:'expression',
+        source:'{' + expression + '}',
+        script:expression
+      };
+    }
 
 XmlGenericId
   = first:idStart rest:(nameChar)*

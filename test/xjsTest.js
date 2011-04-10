@@ -117,15 +117,36 @@ var tests = [
       }
     ],
     render: '<ul><li>foo</li><li>bar</li></ul>'
-  }
+  },
 
-  // attributes can be defined by expression blocks
-/*  {
+  // xml attributes set by expression blocks
+  {
     source: '<div id={foo}>bar</div>',
+    parse: [
+      {
+        type:'tag',
+        open: { start:'<div', end:'>', name:'div', attributes:[
+          {
+            source:' id=',
+            type:'attribute',
+            name:'id',
+            value: {
+              type:'expression',
+              source:'{foo}',
+              script:'foo'
+            }
+          }
+        ]},
+        children:[
+          { type:'pcdata', source:'bar' }
+        ],
+        close: { source:'</div>', name:'div' }
+      }
+    ],
     locals: { foo:'Fubar!' },
     render: '<div id="Fubar!">bar</div>'
   }
-*/
+
 ];
 
 
