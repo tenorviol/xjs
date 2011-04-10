@@ -119,6 +119,22 @@ var tests = [
     render: '<ul><li>foo</li><li>bar</li></ul>'
   },
 
+  // static xml attribute
+  {
+    source: '<div id="foo">bar</div>',
+    parse: [
+      {
+        type:'tag',
+        open: { start:'<div', end:'>', name:'div', attributes:[
+          { type:'attribute', source:' id=', name:'id', value:'foo' }
+        ]},
+        children: [ { type: 'pcdata', source: 'bar' } ],
+        close: { source:'</div>', name:'div' }
+      }
+    ],
+    render: '<div id="foo">bar</div>'
+  },
+
   // xml attributes set by expression blocks
   {
     source: '<div id={foo}>bar</div>',
