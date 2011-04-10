@@ -1,13 +1,25 @@
-xjs
-  = elements:elements
+Xjs
+  = XjsElements
 
-elements
-  = (code / tag)*
+XjsElements
+  = (XjsCodeBlock / XmlTag / XmlPCDATA)*
+
+XjsCodeBlock
+  = '{{' write:'='? js:javascript '}}'
+  {
+    return {
+      type: write ? 'write' : 'script',
+      source: '{{' + write + js + '}}',
+      script: js
+    }
+  }
+
+
 
 // xml
 
-tag
-  = open:openTag children:elements close:closeTag
+XmlTag
+  = open:XmlOpenTag children:XjsElements close:XmlCloseTag
   {
     if (open.name != close.name) {
       throw 'tag mismatch';
@@ -20,8 +32,8 @@ tag
     };
   }
 
-openTag
-  = '<' name:genericId attributes:attributes '>'
+XmlOpenTag
+  = '<' name:XmlGenericId attributes:XmlAttributes '>'
   {
     return {
       start:'<'+name,
@@ -31,8 +43,8 @@ openTag
     };
   }
 
-closeTag
-  = '</' name:genericId '>'
+XmlCloseTag
+  = '</' name:XmlGenericId '>'
   {
     return {
       source:'</' + name + '>',
@@ -40,8 +52,8 @@ closeTag
     };
   }
 
-emptyTag
-  = '<' name:genericId attributes:attributes '/>'
+XmlEmptyTag
+  = '<' name:XmlGenericId attributes:XmlAttributes '/>'
   {
     return {
       type: 'tag',
@@ -50,9 +62,9 @@ emptyTag
     };
   }
 
-attributes
+XmlAttributes
   = attributes:(
-    w:whitespace+ name:genericId '=' value:attrValue
+    w:whitespace+ name:XmlGenericId '=' value:XmlAttributeValue
     {
       return {
         source: w + name + '=',
@@ -62,11 +74,11 @@ attributes
     }
   )*
 
-attrValue
+XmlAttributeValue
   = '"' value:[^"]* '"'  { return value.join(''); }
   / '\'' value:[^'] '\'' { return value.join(''); }
 
-genericId
+XmlGenericId
   = first:idStart rest:(nameChar)*
   {
     return first + rest.join("");
@@ -78,20 +90,14 @@ nameChar = [-_.:a-zA-Z0-9]
 
 whitespace = [ \t\r\n\u000C]
 
-
-// javascript
-
-code
-  = '{{' write:'='? js:javascript '}}'
+XmlPCDATA
+  = pcdata:[^<{]+
   {
     return {
-      type: write ? 'write' : 'script',
-      source: '{{' + write + js + '}}',
-      script: js
-    }
+      type:'pcdata',
+      source:pcdata.join('')
+    };
   }
-
-
 
 
 /*

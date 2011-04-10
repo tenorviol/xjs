@@ -13,8 +13,8 @@ var tests = [
       { type:'write', source:'{{=bar()}}', script:'bar()' }
     ],
     locals: {
-    	foo:'Hello ',
-    	bar:function() { return 'world!'; }
+      foo:'Hello ',
+      bar:function() { return 'world!'; }
     },
     render: 'Hello world!'
   },
@@ -83,7 +83,49 @@ var tests = [
     parse: [ { type:'write', source:'{{=func}}', script:'func' } ],
     locals: { func:function() { return very_secure_code; } },
     render: '[Function]'
+  },
+
+  // empty space between tags will be removed
+  {
+    source: '<ul> <li>foo</li> <li>bar</li> </ul>',
+    parse: [
+      {
+        type:'tag',
+        open: { start:'<ul', end:'>', name:'ul', attributes:[] },
+        children:[
+          { type:'pcdata', source:' ' },
+          {
+            type:'tag',
+            open: { start:'<li', end:'>', name:'li', attributes:[] },
+            children:[
+              { source:'foo', type:'pcdata' }
+            ],
+            close: { source:'</li>', name:'li' }
+          },
+          { type:'pcdata', source:' ' },
+          {
+            type:'tag',
+            open: { start:'<li', end:'>', name:'li', attributes:[] },
+            children:[
+              { source:'bar', type:'pcdata' }
+            ],
+            close: { source:'</li>', name:'li' }
+          },
+          { type:'pcdata', source:' ' }
+        ],
+        close: { source:'</ul>', name:'ul' }
+      }
+    ],
+    render: '<ul><li>foo</li><li>bar</li></ul>'
   }
+
+  // attributes can be defined by expression blocks
+/*  {
+    source: '<div id={foo}>bar</div>',
+    locals: { foo:'Fubar!' },
+    render: '<div id="Fubar!">bar</div>'
+  }
+*/
 ];
 
 
