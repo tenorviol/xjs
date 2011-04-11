@@ -181,7 +181,7 @@ XmlPCDATA
 javascript
   = w1:__ program:Program w2:__
   {
-    return w1 + cleanJoin(program) + w2;
+    return cleanJoin(w1) + cleanJoin(program) + cleanJoin(w2);
 
     function cleanJoin(a) {
       if (typeof a == "string") {
@@ -586,12 +586,10 @@ EOF
 /* Whitespace */
 
 _
-  = ws:(WhiteSpace / MultiLineCommentNoLineTerminator / SingleLineComment)*
-  { return ws.join(''); }
+  = (WhiteSpace / MultiLineCommentNoLineTerminator / SingleLineComment)*
 
 __
-  = ws:(WhiteSpace / LineTerminatorSequence / Comment)*
-  { return ws.join(''); }
+  = (WhiteSpace / LineTerminatorSequence / Comment)*
 
 /* ===== A.2 Number Conversions ===== */
 
