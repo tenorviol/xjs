@@ -1,4 +1,8 @@
 
+exception stack trace line number
+namespace and custom tag support
+tag error checking
+
 benchmark
 
 Which is better?
