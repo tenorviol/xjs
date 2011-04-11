@@ -13,6 +13,35 @@ Some goals
 5. Custom tags, with optional asynchronous rendering.
 6. Template scope variables.
 
+Usage
+-----
+
+Create an xjs template, `helloworld.xjs`:
+
+    {{
+      var greeting = 'Hello world!';
+    }}
+    <html>
+    <head>
+      <title>My xjs template</title>
+    </head>
+    <body>
+      <div id="greeting">{{= greeting }}</div>
+    </body>
+    </html>
+
+Require the xjs module compiler, and respond to an http request using xjs
+
+    require('xjs');
+    var http = require('http');
+    http.createServer(function (req, res) {
+      res.writeHead(200, {'Content-Type': 'text/plain'});
+      require('./helloworld.xjs').render(function(result) {
+        res.end(result);
+      });
+    }).listen(8124, "127.0.0.1");
+    console.log('Server running at http://127.0.0.1:8124/');
+
 Examples
 --------
 

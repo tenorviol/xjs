@@ -1,0 +1,11 @@
+{{
+  var greeting = 'Hello world!';
+}}
+<html>
+<head>
+  <title>My xjs template</title>
+</head>
+<body>
+  <div id="greeting">{{= greeting }}</div>
+</body>
+</html>

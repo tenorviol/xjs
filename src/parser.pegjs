@@ -586,10 +586,12 @@ EOF
 /* Whitespace */
 
 _
-  = (WhiteSpace / MultiLineCommentNoLineTerminator / SingleLineComment)*
+  = ws:(WhiteSpace / MultiLineCommentNoLineTerminator / SingleLineComment)*
+  { return ws.join(''); }
 
 __
-  = (WhiteSpace / LineTerminatorSequence / Comment)*
+  = ws:(WhiteSpace / LineTerminatorSequence / Comment)*
+  { return ws.join(''); }
 
 /* ===== A.2 Number Conversions ===== */
 
