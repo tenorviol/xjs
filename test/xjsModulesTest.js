@@ -36,10 +36,10 @@ tests.forEach(function(test) {
   
   exports['render ' + test.filename] = function(assert) {
     var template = require(test.filename);
-    template.render(test.locals, function(result) {
+    template.render(function(result) {
       assert.equal(test.render, result);
       assert.done();
-    });
+    }, test.locals);
   };
   
 });
