@@ -26,7 +26,7 @@ var tests = [
 
   {
     filename: './templates/test1.xjs',
-    locals: {foo:'bar'},
+    local: {foo:'bar'},
     render: 'bar'
   }
 
@@ -39,7 +39,7 @@ tests.forEach(function(test) {
     template.render(function(result) {
       assert.equal(test.render, result);
       assert.done();
-    }, test.locals);
+    }, test.local);
   };
   
 });

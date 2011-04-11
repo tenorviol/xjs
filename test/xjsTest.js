@@ -34,7 +34,7 @@ var tests = [
       { type:'write', source:'{{=foo}}', script:'foo' },
       { type:'write', source:'{{=bar()}}', script:'bar()' }
     ],
-    locals: {
+    local: {
       foo:'Hello ',
       bar:function() { return 'world!'; }
     },
@@ -45,7 +45,7 @@ var tests = [
   {
     source: '{{= fubar; }}',
     parse: [ { type:'write', source:'{{= fubar; }}', script:' fubar; ' } ],
-    locals: { fubar:'<>"&' },
+    local: { fubar:'<>"&' },
     render: '&lt;&gt;&quot;&amp;'
   },
 
@@ -103,7 +103,7 @@ var tests = [
   {
     source: '{{=func}}',
     parse: [ { type:'write', source:'{{=func}}', script:'func' } ],
-    locals: { func:function() { return very_secure_code; } },
+    local: { func:function() { return very_secure_code; } },
     render: '[Function]'
   },
 
@@ -181,7 +181,7 @@ var tests = [
         close: { source:'</div>', name:'div' }
       }
     ],
-    locals: { foo:'Fubar!' },
+    local: { foo:'Fubar!' },
     render: '<div id="Fubar!">bar</div>'
   }
 
@@ -201,7 +201,7 @@ tests.forEach(function(test) {
     template.render(function(result) {
       assert.equal(test.render, result);
       assert.done();
-    }, test.locals);
+    }, test.local);
   };
 
 });
