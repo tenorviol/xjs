@@ -1,7 +1,15 @@
+0.1.2
+-----
 
 * accept callback function or writable stream for render response
 * automatic template/array loops
 * command line xjs server
+
+future
+------
+
+* when the file changes, reload the module
+* inline xjs blocks
 * auto conversion to html5, plus Schema checking
 * exception stack trace line number
 * namespace and custom tag support

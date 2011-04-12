@@ -20,7 +20,8 @@
  * THE SOFTWARE.
  */
 
-var xjs = require('../lib/xjs');
+var xjs = require('../lib/xjs'),
+    StringStream = require('../lib/StringStream');
 
 var tests = [
 
@@ -34,11 +35,15 @@ var tests = [
 tests.forEach(function(test) {
   
   exports['render ' + test.filename] = function(assert) {
-    var template = require(test.filename);
-    template.render(function(result) {
-      assert.equal(test.render, result);
+    var result = new StringStream();
+    
+    result.on('end', function() {
+      assert.equal(test.render, result.toString());
       assert.done();
-    }, test.local);
+    });
+    
+    var template = require(test.filename);
+    template.render(result, test.local);
   };
   
 });
