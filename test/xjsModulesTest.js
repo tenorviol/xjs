@@ -25,9 +25,8 @@ var xjs = require('../lib/xjs');
 var tests = [
 
   {
-    filename: './templates/test1.xjs',
-    local: {foo:'bar'},
-    render: 'bar'
+    filename: '../example/helloworld.xjs',
+    render: '<html><head><title>Hello world!</title></head><body><h1>Hello world!</h1></body></html>'
   }
 
 ];

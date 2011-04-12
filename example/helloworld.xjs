@@ -3,9 +3,9 @@
 }}
 <html>
 <head>
-  <title>My xjs template</title>
+  <title>{{=greeting}}</title>
 </head>
 <body>
-  <div id="greeting">{{= greeting }}</div>
+  <h1>{{= greeting; }}</h1>
 </body>
 </html>
