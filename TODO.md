@@ -1,15 +1,14 @@
 0.1.3
 -----
 
-
+* inline xjs blocks
+* automatic template/array loops
 
 future
 ------
 
-* automatic template/array loops
 * seamless Express support
 * when the file changes, reload the module
-* inline xjs blocks
 * auto conversion to html5, plus Schema checking
 * exception stack trace line number
 * namespace and custom tag support
