@@ -1,7 +1,8 @@
-0.1.2 / (pending)
------------------
+0.1.2 / 2011-05-11
+------------------
 
 * `render(response)` can now be a callback function or a writable stream
+* added command line xjsserver, a simple way of serving xjs
 
 0.1.1 / 2011-04-11
 -----------------

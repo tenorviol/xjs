@@ -1,20 +1,20 @@
-0.1.2
+0.1.3
 -----
 
-* accept callback function or writable stream for render response
-* automatic template/array loops
-* command line xjs server
+
 
 future
 ------
 
+* automatic template/array loops
 * seamless Express support
 * when the file changes, reload the module
 * inline xjs blocks
 * auto conversion to html5, plus Schema checking
 * exception stack trace line number
 * namespace and custom tag support
-* tag error checking
+* tag error checking, read DTD/Schema
+* test xjsserver
 
 * Which is better?
     1. Writing many small strings to an http response stream.

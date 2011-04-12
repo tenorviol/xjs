@@ -2,13 +2,15 @@
   "name" : "xjs",
   "description" : "A templating language for node.js using xml and javascript",
   "keywords" : [ "template", "xml", "xhp" ],
-  "version" : "0.1.1",
-  "engines" : { "node" : "0.4" },
+  "version" : "0.1.2",
   "author" : "Christopher Johnson",
+  "engines" : { "node" : "0.4" },
   "main" : "lib/xjs.js",
-  "directories" : { "lib" : "./lib" },
+  "bin": { "xjsserver": "./bin/xjsserver" },
   "repository" :
-    { "type" : "git", "url" : "git://github.com/tenorviol/xjs.git" },
+    { "type" : "git"
+      , "url" : "git://github.com/tenorviol/xjs.git" },
   "licenses" :
-    [ { "type" : "MIT", "url" : "http://github.com/tenorviol/xjs/raw/master/LICENSE" } ]
+    [ { "type" : "MIT"
+      , "url" : "http://github.com/tenorviol/xjs/raw/master/LICENSE" } ]
 }

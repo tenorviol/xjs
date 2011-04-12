@@ -1,30 +1,98 @@
 #!/usr/bin/env node
 
-var http = require('http'),
-    url = require('url'),
-    path = require('path');
+var help = [
+  'A very simple http server for rendering xjs',
+  '',
+  'Options:',
+  '  -h, --help      Show this information',
+  '  -p, --port arg  Port number of http server',
+  '  --docroot arg   Root directory of the http server',
+  '  --example       Use the example directory as the docroot'
+].join('\n');
+
 
 require('../lib/xjs');
+var path = require('path'),
+    fs = require('fs'),
+    http = require('http'),
+    url = require('url');
 
-var docroot = process.env.PWD;
 
-var server = http.createServer(function(req, res) {
-  var fullpath = resolvePath(req);
-  if (path.existsSync(fullpath)) {
-    require(fullpath).render(res, { request : req });
-  } else {
-    res.end('404');
+// option defaults
+var opts = {
+  port: 8000,
+  docroot: process.env.PWD
+};
+
+// command line options
+var args = process.argv.slice(2);
+while (args.length) {
+  var arg = args.shift();
+  switch (arg) {
+  case '-h':
+  case '--help':
+    console.log(help);
+    return;
+  case '--docroot':
+    opts.docroot = args.shift();
+    break;
+  case '--example':
+    opts.docroot = __dirname + '/../example';
+    break;
+  case '-p':
+  case '--port':
+    opts.port = parseInt(args.shift());
+    break;
+  default:
+    console.log('unknown command line argument, "' + arg + '"');
   }
-}).listen(8124, "127.0.0.1");
-console.log('Server running at http://127.0.0.1:8124/');
+}
 
-function resolvePath(req) {
+// check the port
+if (!opts.port) {
+  console.log('port must be a whole number');
+  return;
+}
+
+// check the docroot
+opts.docroot = path.resolve(opts.docroot);
+var valid_docroot = false;
+try {
+  var valid_docroot = fs.statSync(opts.docroot).isDirectory();
+} catch (err) {
+}
+if (!valid_docroot) {
+  console.log('invalid docroot, "' + opts.docroot + '"');
+  return;
+}
+
+
+function xjsServer(req, res) {
+  // resolve xjspath
   var parts = url.parse(req.url);
   var uri = path.normalize(parts.pathname);
-  var fullpath = docroot + uri;
-  var ext = path.extname(fullpath);
+  var xjspath = opts.docroot + uri;
+  var ext = path.extname(xjspath);
   if (ext !== '.xjs') {
-    fullpath += '.xjs';
+    xjspath += '.xjs';
   }
-  return fullpath;
+  
+  renderXjs(xjspath, res, { request : req });
 }
+
+function renderXjs(xjspath, res, local) {
+  fs.stat(xjspath, function(err, stat) {
+    if (err) {
+      return res.end('404');
+    }
+    if (stat.isDirectory()) {
+      return renderXjs(xjspath + '/index.xjs', res, local);
+    }
+    require(xjspath).render(res, local);
+  });
+}
+
+
+// start the server
+http.createServer(xjsServer).listen(opts.port);
+console.log('xjs server running on port ' + opts.port);
