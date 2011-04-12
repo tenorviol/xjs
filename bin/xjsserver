@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+
+var http = require('http'),
+    url = require('url'),
+    path = require('path');
+
+require('../lib/xjs');
+
+var docroot = process.env.PWD;
+
+var server = http.createServer(function(req, res) {
+  var fullpath = resolvePath(req);
+  if (path.existsSync(fullpath)) {
+    require(fullpath).render(res, { request : req });
+  } else {
+    res.end('404');
+  }
+}).listen(8124, "127.0.0.1");
+console.log('Server running at http://127.0.0.1:8124/');
+
+function resolvePath(req) {
+  var parts = url.parse(req.url);
+  var uri = path.normalize(parts.pathname);
+  var fullpath = docroot + uri;
+  var ext = path.extname(fullpath);
+  if (ext !== '.xjs') {
+    fullpath += '.xjs';
+  }
+  return fullpath;
+}

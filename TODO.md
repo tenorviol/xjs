@@ -8,6 +8,7 @@
 future
 ------
 
+* seamless Express support
 * when the file changes, reload the module
 * inline xjs blocks
 * auto conversion to html5, plus Schema checking
