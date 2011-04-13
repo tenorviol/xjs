@@ -1,0 +1,11 @@
+{{
+
+var foo = 'bar';
+var template = <h1>{{=foo}}</h1>
+
+}}
+<html>
+  <body>
+    {{= template }}
+  </body>
+</html>

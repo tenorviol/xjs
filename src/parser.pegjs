@@ -21,10 +21,27 @@
  */
 
 Xjs
-  = XjsElements
+  = whitespace* literal:XjsLiteral whitespace*
+  { return literal }
 
-XjsElements
-  = (XjsCodeBlock / XmlTag / XmlPCDATA)*
+XjsLiteral
+  = first:XjsOuterElement rest:(whitespace* XjsOuterElement)*
+  {
+    var result = [ first ];
+    rest.forEach(function(each) {
+      if (each[0].length) {
+        result.push(each[0].join(''));
+      }
+      result.push(each[1]);
+    });
+    return result;
+  }
+
+XjsOuterElement
+  = XjsCodeBlock / XmlTag
+
+XjsInnerElements
+  = (XjsOuterElement / XmlPCDATA)*
 
 XjsCodeBlock
   = '{{' write:'='? js:javascript '}}'
@@ -41,7 +58,7 @@ XjsCodeBlock
 // xml
 
 XmlTag
-  = open:XmlOpenTag children:XjsElements close:XmlCloseTag
+  = open:XmlOpenTag children:XjsInnerElements close:XmlCloseTag
   {
     if (open.name != close.name) {
       throw 'tag mismatch';
@@ -586,7 +603,8 @@ EOF
 /* Whitespace */
 
 _
-  = (WhiteSpace / MultiLineCommentNoLineTerminator / SingleLineComment)*
+  = w:(WhiteSpace / MultiLineCommentNoLineTerminator / SingleLineComment)*
+  { return w.join(''); }
 
 __
   = (WhiteSpace / LineTerminatorSequence / Comment)*
@@ -606,6 +624,7 @@ PrimaryExpression
   / Literal
   / ArrayLiteral
   / ObjectLiteral
+  / XjsLiteral
   / "(" __ Expression __ ")"
 
 ArrayLiteral
