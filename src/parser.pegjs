@@ -21,11 +21,16 @@
  */
 
 Xjs
-  = whitespace* literal:XjsLiteral whitespace*
-  { return literal }
+  = XjsElements
+
+XjsElements
+  = (XjsLiteralElement / XmlPCDATA)*
+
+XjsLiteralElement
+  = XjsCodeBlock / XmlTag
 
 XjsLiteral
-  = first:XjsOuterElement rest:(whitespace* XjsOuterElement)*
+  = first:XjsLiteralElement rest:(whitespace* XjsLiteralElement)*
   {
     var result = [ first ];
     rest.forEach(function(each) {
@@ -36,12 +41,6 @@ XjsLiteral
     });
     return result;
   }
-
-XjsOuterElement
-  = XjsCodeBlock / XmlTag
-
-XjsInnerElements
-  = (XjsOuterElement / XmlPCDATA)*
 
 XjsCodeBlock
   = '{{' write:'='? js:javascript '}}'
@@ -54,11 +53,10 @@ XjsCodeBlock
   }
 
 
-
-// xml
+// XML
 
 XmlTag
-  = open:XmlOpenTag children:XjsInnerElements close:XmlCloseTag
+  = open:XmlOpenTag children:XjsElements close:XmlCloseTag
   {
     if (open.name != close.name) {
       throw 'tag mismatch';
@@ -196,18 +194,28 @@ XmlPCDATA
  */
 
 javascript
-  = w1:__ program:Program w2:__
+  = js:(__ Program __)
   {
-    return cleanJoin(w1) + cleanJoin(program) + cleanJoin(w2);
-
-    function cleanJoin(a) {
-      if (typeof a == "string") {
-        return a;
-      } else {
-        for (var i in a) {
-          a[i] = cleanJoin(a[i]);
+    var result = [''];
+    cleanJoin(js, result);
+    if (result.length === 1) {
+      result = result[0];
+    }
+    return result;
+    
+    function cleanJoin(a, result) {
+      var marker = result.length - 1;
+      for (var i in a) {
+        if (typeof a[i] === 'string') {
+          result[marker] += a[i];
+        } else if (a[i].length !== undefined) {
+          cleanJoin(a[i], result);
+        } else {
+          marker++;
+          result[marker] = a[i];
+          marker++;
+          result[marker] = '';
         }
-        return a.join("");
       }
     }
   }

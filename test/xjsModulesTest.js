@@ -32,7 +32,7 @@ var tests = [
 
   {
     filename: '../example/templatefun.xjs',
-    render: '<html><head><title>Hello world!</title></head><body><h1>Hello world!</h1></body></html>'
+    render: '<html><body><h1>bar</h1></body></html>'
   }
 
 ];
