@@ -1,0 +1,14 @@
+{{
+
+var list = [
+  { fruit : 'apple' },
+  { fruit : 'pear' },
+  { fruit : 'banana' }
+];
+
+var li = <li>{{=fruit}}</li>
+
+}}
+<ul>
+  {{ li.render(response, list) }}
+</ul>

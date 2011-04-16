@@ -33,6 +33,11 @@ var tests = [
   {
     filename: '../example/templatefun.xjs',
     render: '<html><body><h1>bar</h1></body></html>'
+  },
+  
+  {
+    filename: '../example/array.xjs',
+    render: '<ul><li>apple</li><li>pear</li><li>banana</li></ul>'
   }
 
 ];
