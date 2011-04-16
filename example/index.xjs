@@ -1,16 +1,13 @@
+{{
+  var dir = local.dir ? dir : __dirname;
+}}
 <html>
-<head>
-  <title>Index of {{= __dirname }}</title>
-</head>
 <body>
-  <h1>Index of {{= __dirname }}</h1>
   <ul>
   {{
     var async = response.asyncStream();
-    var files = require('fs').readdir(__dirname, function(err, files) {
-      files.forEach(function(file) {
-        async.write('<li>' + file + '</li>');
-      });
+    var files = require('fs').readdir(dir, function(err, files) {
+      <li>{{=local}}</li>.render(async, files);
       async.end();
     });
   }}

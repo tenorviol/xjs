@@ -197,19 +197,20 @@ javascript
   = js:(__ Program __)
   {
     var result = [''];
-    cleanJoin(js, result);
+    var marker = 0;
+    
+    cleanJoin(js);
     if (result.length === 1) {
       result = result[0];
     }
     return result;
     
-    function cleanJoin(a, result) {
-      var marker = result.length - 1;
+    function cleanJoin(a) {
       for (var i in a) {
         if (typeof a[i] === 'string') {
           result[marker] += a[i];
         } else if (a[i].length !== undefined) {
-          cleanJoin(a[i], result);
+          cleanJoin(a[i]);
         } else {
           marker++;
           result[marker] = a[i];
