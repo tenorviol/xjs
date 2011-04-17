@@ -1,3 +1,9 @@
+0.1.3
+-----
+
+* added inline xjs blocks
+* automatically loop through local arrays
+
 0.1.2 / 2011-05-11
 ------------------
 

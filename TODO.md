@@ -1,19 +1,18 @@
-0.1.3
+0.1.4
 -----
 
-* inline xjs blocks
-* automatic template/array loops
+* when the file changes, reload the module
+* namespace and custom tag support
+* seamless Express support
 
 future
 ------
 
-* seamless Express support
-* when the file changes, reload the module
 * auto conversion to html5, plus Schema checking
 * exception stack trace line number
-* namespace and custom tag support
 * tag error checking, read DTD/Schema
 * test xjsserver
+* how inefficient are the nested with statements?
 
 * Which is better?
     1. Writing many small strings to an http response stream.
