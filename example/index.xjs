@@ -7,7 +7,7 @@
   {{
     var async = response.asyncStream();
     var files = require('fs').readdir(dir, function(err, files) {
-      <li>{{=local}}</li>.render(async, files);
+      async.write(<li>{{=local}}</li>, files);
       async.end();
     });
   }}

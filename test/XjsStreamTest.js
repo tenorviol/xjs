@@ -20,11 +20,11 @@
  * THE SOFTWARE.
  */
 
-var AsyncStream = require('../lib/AsyncStream'),
-  StringStream = require('../lib/StringStream');
+var XjsStream = require('../lib/XjsStream'),
+    StringStream = require('../lib/StringStream');
 
 exports['test typical stream function'] = function(assert) {
-  var stream = new AsyncStream();
+  var stream = new XjsStream();
   var result = new StringStream();
   stream.pipe(result);
   
@@ -40,7 +40,7 @@ exports['test typical stream function'] = function(assert) {
 
 
 exports['test async callback'] = function(test) {
-  var stream = new AsyncStream();
+  var stream = new XjsStream();
   var result = new StringStream();
   stream.pipe(result);
   
@@ -69,7 +69,7 @@ exports['test async callback'] = function(test) {
 };
 
 exports['test kill async'] = function(test) {
-  var stream = new AsyncStream();
+  var stream = new XjsStream();
   var result = new StringStream();
   stream.pipe(result);
   
@@ -100,7 +100,7 @@ exports['test kill async'] = function(test) {
 };
 
 exports['test async stream'] = function(assert) {
-  var stream = new AsyncStream();
+  var stream = new XjsStream();
   var result = new StringStream();
   stream.pipe(result);
   
@@ -133,4 +133,19 @@ exports['test async stream'] = function(assert) {
     assert.equal('1foo2|2.1fubar2.2|3bar4', result.toString());
     assert.done();
   });
+};
+
+exports['write renderable objects'] = function(assert) {
+  var stream = new XjsStream();
+  var result = new StringStream();
+  stream.pipe(result);
+  
+  stream.write({
+    render: function(stream, local) {
+      stream.write(JSON.stringify(local));
+    }
+  }, { foo : 'bar' });
+  
+  assert.equal('{"foo":"bar"}', result.toString());
+  assert.done();
 };
