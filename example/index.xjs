@@ -5,7 +5,7 @@
 <body>
   <ul>
   {{
-    var async = response.asyncStream();
+    var async = response.async();
     var files = require('fs').readdir(dir, function(err, files) {
       async.write(<li>{{=local}}</li>, files);
       async.end();

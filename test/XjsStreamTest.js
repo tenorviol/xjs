@@ -23,51 +23,121 @@
 var XjsStream = require('../lib/XjsStream'),
     StringStream = require('../lib/StringStream');
 
-exports['test typical stream function'] = function(assert) {
-  var stream = new XjsStream();
-  var result = new StringStream();
-  stream.pipe(result);
-  
-  assert.equal(true, stream.writable);
-  
-  stream.write('Good morning\n');
-  stream.write('good afternoon\n');
-  stream.end('and good night!');
-  
-  assert.equal('Good morning\ngood afternoon\nand good night!', result.toString());
-  assert.done();
-};
+var tests = [
 
+  {
+    name: 'test typical stream behavior',
+    expect : 'Good morning\ngood afternoon\nand good night!',
+    render : function(stream) {
+      stream.write('Good morning\n');
+      stream.write('good afternoon\n');
+      stream.end('and good night!');
+    }
+  },
 
-exports['test async callback'] = function(test) {
-  var stream = new XjsStream();
-  var result = new StringStream();
-  stream.pipe(result);
-  
-  stream.write(1);
-  stream.async(function(callback) {
-    setTimeout(function() {
-      callback(' foo ');
-    }, 20);
-  });
-  stream.write(2);
-  stream.async(function(callback) {
-    setTimeout(function() {
-      callback(' bar ');
-    }, 5);
-  });
-  stream.write(3);
-  stream.async(function(callback) {
-    callback(' fubar ');
-  });
-  stream.end(4);
-  
-  result.on('end', function() {
-    test.equal('1 foo 2 bar 3 fubar 4', result.toString());
-    test.done();
-  });
-};
+  {
+    name : 'test writing various objects to the stream',
+    expect : '[Function]barfood!fubar',
+    render : function(stream) {
+      // these should never register on the stream
+      stream.write(null);
+      stream.write(undefined);
 
+      // functions should always render as '[Function]'
+      stream.write(function() {});
+
+      // first try an object's render method
+      stream.write({
+        render: function(stream, arg1, arg2) {
+          stream.write(arg2);
+          stream.write(arg1);
+        },
+        toString: function() {
+          return 'nothing to see here';
+        }
+      }, 'food!', 'bar');
+
+      // objects lacking render use toString()
+      stream.write({
+        toString: function() { return 'fubar'; }
+      });
+
+      stream.end();
+    }
+  },
+
+  {
+    name : 'test escape',
+    expect : '&lt;&gt;&amp;&quot; &quot;&amp;&lt;&gt;',
+    render : function(stream) {
+      stream.escape('<>&" "&<>');
+      stream.end();
+    }
+  },
+
+  {
+    name : 'test tag writing',
+    expect : '<div id="name" class="user"><fb:name uid="4"/></div>',
+    render : function(stream) {
+      stream.writeTag(null, 'div', { id : 'name', 'class' : 'user' },
+        function(stream) {
+          stream.writeTag('fb', 'name', { uid : 4 });
+        }
+      );
+      stream.end();
+    }
+  },
+  
+  {
+    name : 'test async substream',
+    expect : '<div>monkey in the middle</div>',
+    render : function(stream) {
+      var async;
+      
+      stream.writeTag(null, 'div', {}, function(stream) {
+        // the async substream is bookmarked between the parent tags
+        async1 = stream.async();
+        async2 = stream.async();
+      });
+      stream.end();
+      
+      // ending the async substream can take arbitrarily long
+      setTimeout(function() {
+        async1.end('monkey');
+      }, 10);
+      
+      async2.write(' in ');
+      async2.end('the middle');
+    }
+  }
+
+];
+
+tests.forEach(function(test) {
+  
+  exports[test.name] = function(assert) {
+    assert.expect(4);
+    
+    var stream = new XjsStream();
+    var result = new StringStream();
+    stream.pipe(result);
+    
+    result.on('end', function() {
+      assert.equal(test.expect, result.toString());
+      assert.equal(false, stream.writable);
+      assert['throws'](function() {
+        stream.write('this should throw');
+      });
+      assert.done();
+    });
+    
+    assert.equal(true, stream.writable);
+    test.render(stream);
+  };
+
+});
+
+/*
 exports['test kill async'] = function(test) {
   var stream = new XjsStream();
   var result = new StringStream();
@@ -99,42 +169,6 @@ exports['test kill async'] = function(test) {
   });
 };
 
-exports['test async stream'] = function(assert) {
-  var stream = new XjsStream();
-  var result = new StringStream();
-  stream.pipe(result);
-  
-  stream.write(1);
-  stream.async(function(callback) {
-    setTimeout(function() {
-      callback('foo');
-    }, 20);
-  });
-  
-  stream.write(2);
-  var asyncStream = stream.asyncStream();
-  
-  stream.write(3);
-  stream.async(function(callback) {
-    setTimeout(function() {
-      callback('bar');
-    }, 5);
-  });
-  
-  asyncStream.write('|2.1');
-  asyncStream.async(function(callback) {
-    callback('fubar');
-  });
-  asyncStream.end('2.2|');
-  
-  stream.end(4);
-  
-  result.on('end', function() {
-    assert.equal('1foo2|2.1fubar2.2|3bar4', result.toString());
-    assert.done();
-  });
-};
-
 exports['write renderable objects'] = function(assert) {
   var stream = new XjsStream();
   var result = new StringStream();
@@ -149,3 +183,4 @@ exports['write renderable objects'] = function(assert) {
   assert.equal('{"foo":"bar"}', result.toString());
   assert.done();
 };
+*/
