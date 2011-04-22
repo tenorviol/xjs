@@ -3,6 +3,11 @@ xjs
 
 xml javascript templates for node.js
 
+Status (Pre-alpha)
+------------------
+
+Still having fun getting all the core features going. Ver 0.2 will be the first alpha release.
+
 Some goals
 ----------
 
