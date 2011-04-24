@@ -43,7 +43,7 @@ var tests = [
       stream.write(null);
       stream.write(undefined);
 
-      // functions should always render as '[Function]'
+      // functions should always show as '[Function]'
       stream.write(function() {});
 
       // first try an object's render method
@@ -94,7 +94,7 @@ var tests = [
     render : function(stream) {
       var async;
       
-      stream.writeTag(null, 'div', {}, function(stream) {
+      stream.writeTag(null, 'div', null, function(stream) {
         // the async substream is bookmarked between the parent tags
         async1 = stream.async();
         async2 = stream.async();
