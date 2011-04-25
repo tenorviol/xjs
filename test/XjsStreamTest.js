@@ -87,27 +87,55 @@ var tests = [
       stream.end();
     }
   },
-  
+
   {
     name : 'test async substream',
     expect : '<div>monkey in the middle</div>',
     render : function(stream) {
-      var async;
+      var async1;
       
       stream.writeTag(null, 'div', null, function(stream) {
         // the async substream is bookmarked between the parent tags
         async1 = stream.async();
-        async2 = stream.async();
-      });
+        stream.async(function(async2) {
+          async2.write(' in ');
+          async2.end('the middle'); // <div>[async1] in the middle
+        });
+      }); // <div>[async1] in the middle</div>
       stream.end();
       
       // ending the async substream can take arbitrarily long
       setTimeout(function() {
-        async1.end('monkey');
+        async1.end('monkey'); // <div>monkey in the middle</div>
       }, 10);
-      
-      async2.write(' in ');
-      async2.end('the middle');
+    }
+  },
+
+  {
+    name : 'test kill async stream',
+    expect : 'twothree',
+    render : function(stream, assert) {
+      stream.async(function(stream) {
+        setTimeout(function() {
+          assert['throws'](function() {
+            stream.end('one');
+          });
+        }, 20);
+      });
+      stream.async(function(stream) {
+        setTimeout(function() {
+          stream.end('two');
+        }, 5);
+      });
+      stream.async(function(stream) {
+        stream.end('three');
+      });
+      stream.end();
+
+      // after 10ms, signal the stream to finish
+      setTimeout(function() {
+        stream.kill();
+      }, 10);
     }
   }
 
@@ -116,8 +144,6 @@ var tests = [
 tests.forEach(function(test) {
   
   exports[test.name] = function(assert) {
-    assert.expect(4);
-    
     var stream = new XjsStream();
     var result = new StringStream();
     stream.pipe(result);
@@ -132,55 +158,7 @@ tests.forEach(function(test) {
     });
     
     assert.equal(true, stream.writable);
-    test.render(stream);
+    test.render(stream, assert);
   };
 
 });
-
-/*
-exports['test kill async'] = function(test) {
-  var stream = new XjsStream();
-  var result = new StringStream();
-  stream.pipe(result);
-  
-  stream.async(function(callback) {
-    setTimeout(function() {
-      callback('foo');
-    }, 20);
-  });
-  stream.async(function(callback) {
-    setTimeout(function() {
-      callback('bar');
-    }, 5);
-  });
-  stream.async(function(callback) {
-    callback('fubar');
-  });
-  stream.end();
-  
-  // after 10ms, signal the stream to finish
-  setTimeout(function() {
-    stream.kill();
-  }, 10);
-  
-  result.on('end', function() {
-    test.equal('barfubar', result.toString());
-    test.done();
-  });
-};
-
-exports['write renderable objects'] = function(assert) {
-  var stream = new XjsStream();
-  var result = new StringStream();
-  stream.pipe(result);
-  
-  stream.write({
-    render: function(stream, local) {
-      stream.write(JSON.stringify(local));
-    }
-  }, { foo : 'bar' });
-  
-  assert.equal('{"foo":"bar"}', result.toString());
-  assert.done();
-};
-*/
