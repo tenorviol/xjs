@@ -43,8 +43,8 @@ var tests = [
 
   // write block with trailing semicolon
   {
-    source: '{{= fubar; }}',
-    parse: [ { type:'write', source:'{{= fubar; }}', script:' fubar; ' } ],
+    source: '{{= fubar }}',
+    parse: [ { type:'write', source:'{{= fubar }}', script:' fubar ' } ],
     local: { fubar:'<>"&' },
     render: '&lt;&gt;&quot;&amp;'
   },
@@ -76,12 +76,12 @@ var tests = [
   {
     source: '{{ var qs = require("querystring"); }}'
           + '{{= qs.stringify({ foo:"bar" }) }}'
-          + '{{= process.version;;; }}'
+          + '{{= process.version }}'
           + '{{= console.log ? true : false }}',
     parse: [
       { type: 'script', source: '{{ var qs = require("querystring"); }}', script: ' var qs = require("querystring"); '},
       { type: 'write', source: '{{= qs.stringify({ foo:"bar" }) }}', script: ' qs.stringify({ foo:"bar" }) '},
-      { type: 'write', source: '{{= process.version;;; }}', script: ' process.version;;; ' },
+      { type: 'write', source: '{{= process.version }}', script: ' process.version ' },
       { type: 'write', source: '{{= console.log ? true : false }}', script: ' console.log ? true : false ' }
     ],
     render: 'foo=bar' + process.version + 'true'

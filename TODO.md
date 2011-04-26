@@ -1,9 +1,11 @@
 0.1.4
 -----
 
+* should the default write for the stream class escape?
+* seamless Express support
+
 * when the file changes, reload the module
 * namespace and custom tag support
-* seamless Express support
 
 future
 ------

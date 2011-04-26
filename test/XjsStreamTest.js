@@ -70,7 +70,7 @@ var tests = [
     name : 'test escape',
     expect : '&lt;&gt;&amp;&quot; &quot;&amp;&lt;&gt;',
     render : function(stream) {
-      stream.escape('<>&" "&<>');
+      stream.write('<>&" "&<>');
       stream.end();
     }
   },
