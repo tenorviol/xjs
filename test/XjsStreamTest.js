@@ -20,8 +20,7 @@
  * THE SOFTWARE.
  */
 
-var XjsStream = require('../lib/XjsStream'),
-    StringStream = require('../lib/StringStream');
+var XjsStream = require('../lib/XjsStream');
 
 var tests = [
 
