@@ -1,7 +1,6 @@
 0.1.4
 -----
 
-* should the default write for the stream class escape?
 * seamless Express support
 
 * when the file changes, reload the module
@@ -10,6 +9,9 @@
 future
 ------
 
+* In express, res.render does not deal with the possibility of an
+  asynchronous render method. This does not play well with xjs,
+  but please confirm.
 * auto conversion to html5, plus Schema checking
 * exception stack trace line number
 * tag error checking, read DTD/Schema
