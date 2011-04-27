@@ -52,15 +52,11 @@ var tests = [
 tests.forEach(function(test) {
   
   exports['render ' + test.filename] = function(assert) {
-    var result = new StringStream();
-    
-    result.on('end', function() {
-      assert.equal(test.render, result.toString());
-      assert.done();
-    });
-    
     var template = require(test.filename);
-    template.render(result, test.local);
+    template.render(function(result) {
+      assert.equal(test.render, result);
+      assert.done();
+    }, test.local);
   };
   
 });

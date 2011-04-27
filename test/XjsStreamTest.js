@@ -144,12 +144,8 @@ var tests = [
 tests.forEach(function(test) {
   
   exports[test.name] = function(assert) {
-    var stream = new XjsStream();
-    var result = new StringStream();
-    stream.pipe(result);
-    
-    result.on('end', function() {
-      assert.equal(test.expect, result.toString());
+    var stream = new XjsStream(function(result) {
+      assert.equal(test.expect, result);
       assert.equal(false, stream.writable);
       assert['throws'](function() {
         stream.write('this should throw');
