@@ -107,6 +107,29 @@ var tests = [
     render: '[Function]'
   },
 
+  // writing tags should just work
+  {
+    source: '<div>{{= <span>Foo</span> }}</div>',
+    parse: [ { type: 'tag',
+        open: { start: '<div', end: '>', name: 'div', attributes: [] },
+        children: 
+         [ { type: 'write',
+             source: '{{= ,[object Object], }}',
+             script: 
+              [ ' ',
+                { type: 'tag',
+                  open: 
+                   { start: '<span',
+                     end: '>',
+                     name: 'span',
+                     attributes: [] },
+                  children: [ { type: 'pcdata', source: 'Foo' } ],
+                  close: { source: '</span>', name: 'span' } },
+                ' ' ] } ],
+        close: { source: '</div>', name: 'div' } } ],
+    render: '<div><span>Foo</span></div>'
+  },
+
   // empty space between tags will be removed
   {
     source: '<ul> <li>foo</li> <li>bar</li> </ul>',
