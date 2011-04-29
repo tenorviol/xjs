@@ -17,6 +17,7 @@ future
 * tag error checking, read DTD/Schema
 * test xjsserver
 * how inefficient are the nested with statements?
+* rewrite the parser in c++ by extending v8's parser.cc
 
 * Which is better?
     1. Writing many small strings to an http response stream.
