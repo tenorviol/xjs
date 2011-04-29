@@ -1,10 +1,9 @@
-0.1.4
+0.1.5
 -----
 
-* seamless Express support
-
-* when the file changes, reload the module
+* simpler xjs.render / view arch aping express
 * namespace and custom tag support
+* parent tag access within the children render block
 
 future
 ------
@@ -12,6 +11,7 @@ future
 * In express, res.render does not deal with the possibility of an
   asynchronous render method. This does not play well with xjs,
   but please confirm.
+* seamless Express support. This is a real problem and so far unresolvable
 * auto conversion to html5, plus Schema checking
 * exception stack trace line number
 * tag error checking, read DTD/Schema

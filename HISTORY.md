@@ -3,6 +3,7 @@
 
 * refactored stream class
 * XjsStream now escapes strings by default; use writeRaw for not that
+* Single '{'s can  now be used in PCDATA
 
 0.1.3
 -----

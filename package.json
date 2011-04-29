@@ -2,7 +2,7 @@
   "name" : "xjs",
   "description" : "A templating language for node.js using xml and javascript",
   "keywords" : [ "template", "xml", "xhp" ],
-  "version" : "0.1.3",
+  "version" : "0.1.4",
   "author" : "Christopher Johnson",
   "engines" : { "node" : "0.4" },
   "main" : "lib/xjs.js",
