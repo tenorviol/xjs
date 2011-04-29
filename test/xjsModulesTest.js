@@ -45,6 +45,11 @@ var tests = [
     local: { dir:__dirname },
     // NOTE: new dir files must accompany a change in the render
     render: '<html><body><ul><li>StringStreamTest.js</li><li>xjsModulesTest.js</li><li>XjsStreamTest.js</li><li>xjsTest.js</li></ul></body></html>'
+  },
+
+  {
+    filename: '../example/inlinejs.xjs',
+    render: '<script type="text/javascript">\n(function() {\n  console.log(\'foo\');\n})();\n</script>'
   }
 
 ];

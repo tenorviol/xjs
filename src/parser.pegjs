@@ -137,7 +137,7 @@ nameChar = [-_.:a-zA-Z0-9]
 whitespace = [ \t\r\n\u000C]
 
 XmlPCDATA
-  = pcdata:[^<{]+
+  = pcdata:( [^<{] / first:'{' second:!'{' { return first + second; } )+
   {
     return {
       type:'pcdata',
