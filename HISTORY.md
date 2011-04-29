@@ -1,5 +1,10 @@
-0.1.4
+0.1.5
 -----
+
+
+
+0.1.4 / 2011-04-29
+------------------
 
 * refactored stream class
 * XjsStream now escapes strings by default; use writeRaw for not that
@@ -11,7 +16,7 @@
 * added inline xjs blocks
 * automatically loop through local arrays
 
-0.1.2 / 2011-05-11
+0.1.2 / 2011-04-11
 ------------------
 
 * `render(response)` can now be a callback function or a writable stream
