@@ -1,7 +1,7 @@
 xjs
 ===
 
-xml javascript templates for node.js
+XML Javascript templates for node.js
 
 Status (Pre-alpha)
 ------------------
@@ -23,6 +23,7 @@ Usage
 
 Create an xjs template, `helloworld.xjs`:
 
+```html
     {{
       var greeting = 'Hello world!';
     }}
@@ -34,9 +35,11 @@ Create an xjs template, `helloworld.xjs`:
       <div id="greeting">{{= greeting }}</div>
     </body>
     </html>
+```
 
-Require the xjs module compiler, and respond to an http request using xjs
+Require the xjs module compiler, and respond to an HTTP request using xjs
 
+```javascript
     require('xjs');
     var http = require('http');
     http.createServer(function (req, res) {
@@ -46,24 +49,30 @@ Require the xjs module compiler, and respond to an http request using xjs
       });
     }).listen(8124, "127.0.0.1");
     console.log('Server running at http://127.0.0.1:8124/');
+```
 
 Examples
 --------
 
 ### Echo (html escaped)
 
+```
     {{= 'Hello world! < J.R.R. Tolkein' }}
     
     // Output: Hello world! &lt; J.R.R. Tolkein
+```
 
 ### Tags
 
+```html
     <div id={foo} class="foo">{{= bar('Fubar!') }}</div>
     
     // Output: <div id="value of foo" class="foo">return value of bar</div>
+```
 
 ### Inline xj
 
+```html
     <div id="page">
     {{
       var template;
@@ -78,9 +87,11 @@ Examples
     
     // Output 1: <div id="page"><div>value of foo</div></div>
     // Output 2: <div id="page"><div>bar</div></div>
+```
 
 ### Template scope
 
+```html
     {{
       var QS = require('querystring')
       var q = { foo:'bar' };
@@ -88,9 +99,11 @@ Examples
     <a href={ '/link?' + QS.stringify(q) }>click me</a>
     
     // Output: <a href="/link?foo=bar">click me</a>
+```
 
 ### Script modification and output
 
+```html
     <script>
     // <![CDATA[
       console.log({{= JSON.stringify(foo) }});
@@ -104,6 +117,7 @@ Examples
       // ]]>
       </script>
     */
+```
 
 License
 -------
