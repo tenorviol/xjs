@@ -33,7 +33,7 @@ var tests = [
     filename: '../example/index.xjs',
     local: { dir:__dirname },
     // NOTE: new dir files must accompany a change in the render
-    render: '<html><body><ul><li>StringStreamTest.js</li><li>xjsModulesTest.js</li><li>XjsStreamTest.js</li><li>xjsTest.js</li></ul></body></html>'
+    render: '<html><body><ul><li>StringStream.test.js</li><li>xjs.test.js</li><li>xjsModules.test.js</li><li>XjsStream.test.js</li></ul></body></html>'
   },
 
   {
