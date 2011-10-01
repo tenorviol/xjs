@@ -1,16 +1,20 @@
-{{
+<?
   var dir = local.dir ? dir : __dirname;
-}}
+?>
 <html>
 <body>
   <ul>
-  {{
+  <?
     var async = response.async();
     var files = require('fs').readdir(dir, function(err, files) {
-      async.write(<li>{{=local}}</li>, files);
+      for (var i in files) {
+        async.writeRaw('<li>');
+        async.write(files[i]);
+        async.writeRaw('</li>');
+      }
       async.end();
     });
-  }}
+  ?>
   </ul>
 </body>
 </html>

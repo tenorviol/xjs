@@ -24,20 +24,9 @@ var xjs = require('../lib/xjs'),
     StringStream = require('../lib/StringStream');
 
 var tests = [
-
   {
     filename: '../example/helloworld.xjs',
     render: '<html><head><title>Hello world!</title></head><body><h1>Hello world!</h1></body></html>'
-  },
-
-  {
-    filename: '../example/templatefun.xjs',
-    render: '<html><body><h1>bar</h1></body></html>'
-  },
-
-  {
-    filename: '../example/array.xjs',
-    render: '<ul><li>apple</li><li>pear</li><li>banana</li></ul>'
   },
 
   {
@@ -51,7 +40,6 @@ var tests = [
     filename: '../example/inlinejs.xjs',
     render: '<script type="text/javascript">\n(function() {\n  console.log(\'foo\');\n})();\n</script>'
   }
-
 ];
 
 tests.forEach(function(test) {

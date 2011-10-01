@@ -29,10 +29,10 @@ var tests = [
   // 'Hello world!'
   // with write block calling passed-in function
   {
-    source: '{{=foo}}{{=bar()}}',
+    source: '<?=foo?><?=bar()?>',
     parse: [
-      { type:'write', source:'{{=foo}}', script:'foo' },
-      { type:'write', source:'{{=bar()}}', script:'bar()' }
+      { type:'write', source:'<?=foo?>', script:'foo' },
+      { type:'write', source:'<?=bar()?>', script:'bar()' }
     ],
     local: {
       foo:'Hello ',
@@ -43,8 +43,8 @@ var tests = [
 
   // write block with trailing semicolon
   {
-    source: '{{= fubar }}',
-    parse: [ { type:'write', source:'{{= fubar }}', script:' fubar ' } ],
+    source: '<?= fubar ?>',
+    parse: [ { type:'write', source:'<?= fubar ?>', script:' fubar ' } ],
     local: { fubar:'<>"&' },
     render: '&lt;&gt;&quot;&amp;'
   },
@@ -52,18 +52,18 @@ var tests = [
   // simple tag
   // using in-template variable assignment
   {
-    source: '{{ var foo = "bar"; }}<div>{{= foo }}</div>',
+    source: '<? var foo = "bar"; ?><div><?= foo ?></div>',
     parse: [
       {
         type:'script',
-        source:'{{ var foo = "bar"; }}',
+        source:'<? var foo = "bar"; ?>',
         script:' var foo = "bar"; '
       },
       {
         type:'tag',
         open: { start:'<div', end:'>', name:'div', attributes:[] },
         children:[
-          { type:'write', source:'{{= foo }}', script:' foo ' }
+          { type:'write', source:'<?= foo ?>', script:' foo ' }
         ],
         close: { source:'</div>', name:'div' }
       }
@@ -74,15 +74,15 @@ var tests = [
   // checking access to typical node.js globals
   // i.e. process, console, require
   {
-    source: '{{ var qs = require("querystring"); }}'
-          + '{{= qs.stringify({ foo:"bar" }) }}'
-          + '{{= process.version }}'
-          + '{{= console.log ? true : false }}',
+    source: '<? var qs = require("querystring"); ?>'
+          + '<?= qs.stringify({ foo:"bar" }) ?>'
+          + '<?= process.version ?>'
+          + '<?= console.log ? true : false ?>',
     parse: [
-      { type: 'script', source: '{{ var qs = require("querystring"); }}', script: ' var qs = require("querystring"); '},
-      { type: 'write', source: '{{= qs.stringify({ foo:"bar" }) }}', script: ' qs.stringify({ foo:"bar" }) '},
-      { type: 'write', source: '{{= process.version }}', script: ' process.version ' },
-      { type: 'write', source: '{{= console.log ? true : false }}', script: ' console.log ? true : false ' }
+      { type: 'script', source: '<? var qs = require("querystring"); ?>', script: ' var qs = require("querystring"); '},
+      { type: 'write', source: '<?= qs.stringify({ foo:"bar" }) ?>', script: ' qs.stringify({ foo:"bar" }) '},
+      { type: 'write', source: '<?= process.version ?>', script: ' process.version ' },
+      { type: 'write', source: '<?= console.log ? true : false ?>', script: ' console.log ? true : false ' }
     ],
     render: 'foo=bar' + process.version + 'true'
   },
@@ -90,10 +90,10 @@ var tests = [
   // null and undefined are javascript's non-objects
   // they have no properties and will not be written
   {
-    source: '{{= undefined }}{{= null }}',
+    source: '<?= undefined ?><?= null ?>',
     parse: [
-      { type: 'write', source: '{{= undefined }}', script: ' undefined ' },
-      { type: 'write', source: '{{= null }}', script: ' null ' }
+      { type: 'write', source: '<?= undefined ?>', script: ' undefined ' },
+      { type: 'write', source: '<?= null ?>', script: ' null ' }
     ],
     render: ''
   },
@@ -101,20 +101,20 @@ var tests = [
   // writing a function should not dump code automatically
   // to dump code, call the function's toString() method
   {
-    source: '{{=func}}',
-    parse: [ { type:'write', source:'{{=func}}', script:'func' } ],
+    source: '<?=func?>',
+    parse: [ { type:'write', source:'<?=func?>', script:'func' } ],
     local: { func:function() { return very_secure_code; } },
     render: '[Function]'
   },
-
+/* TODO:
   // writing tags should just work
   {
-    source: '<div>{{= <span>Foo</span> }}</div>',
+    source: '<div><?= <span>Foo</span> ?></div>',
     parse: [ { type: 'tag',
         open: { start: '<div', end: '>', name: 'div', attributes: [] },
         children: 
          [ { type: 'write',
-             source: '{{= ,[object Object], }}',
+             source: '<?= <span>Foo</span> ?>',
              script: 
               [ ' ',
                 { type: 'tag',
@@ -129,7 +129,7 @@ var tests = [
         close: { source: '</div>', name: 'div' } } ],
     render: '<div><span>Foo</span></div>'
   },
-
+*/
   // empty space between tags will be removed
   {
     source: '<ul> <li>foo</li> <li>bar</li> </ul>',

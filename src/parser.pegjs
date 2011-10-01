@@ -43,11 +43,11 @@ XjsLiteral
   }
 
 XjsCodeBlock
-  = '{{' write:'='? js:javascript '}}'
+  = '<?' write:'='? js:script '?>'
   {
     return {
       type: write ? 'write' : 'script',
-      source: '{{' + write + js + '}}',
+      source: '<?' + write + js + '?>',
       script: js
     }
   }
@@ -137,7 +137,7 @@ nameChar = [-_.:a-zA-Z0-9]
 whitespace = [ \t\r\n\u000C]
 
 XmlPCDATA
-  = pcdata:( [^<{] / first:'{' second:!'{' { return first + second; } )+
+  = pcdata:[^<]+
   {
     return {
       type:'pcdata',
@@ -145,6 +145,22 @@ XmlPCDATA
     };
   }
 
+script
+  = script:([^?] / '?' [^>])+
+  {
+    function cleanJoin(a) {
+      if (typeof a === 'string') {
+        return a;
+      }
+      var result = '';
+      for (var i in a) {
+        result += cleanJoin(a[i]);
+      }
+      return result;
+    }
+    
+    return cleanJoin(script);
+  }
 
 /*
  * JavaScript parser based on the grammar described in ECMA-262, 5th ed.
