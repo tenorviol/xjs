@@ -8,9 +8,9 @@
     var async = out.async();
     var files = require('fs').readdir(dir, function(err, files) {
       for (var i in files) {
-        async.writeRaw('<li>');
+        async.raw('<li>');
         async.write(files[i]);
-        async.writeRaw('</li>');
+        async.raw('</li>');
       }
       async.end();
     });

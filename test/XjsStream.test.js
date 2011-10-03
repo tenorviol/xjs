@@ -78,9 +78,9 @@ var tests = [
     name : 'test tag writing',
     expect : '<div id="name" class="user"><fb:name uid="4"/></div>',
     render : function(stream) {
-      stream.writeTag(null, 'div', { id : 'name', 'class' : 'user' },
+      stream.tag(null, 'div', { id : 'name', 'class' : 'user' },
         function(stream) {
-          stream.writeTag('fb', 'name', { uid : 4 });
+          stream.tag('fb', 'name', { uid : 4 });
         }
       );
       stream.end();
@@ -93,7 +93,7 @@ var tests = [
     render : function(stream) {
       var async1;
       
-      stream.writeTag(null, 'div', null, function(stream) {
+      stream.tag(null, 'div', null, function(stream) {
         // the async substream is bookmarked between the parent tags
         async1 = stream.async();
         stream.async(function(async2) {
