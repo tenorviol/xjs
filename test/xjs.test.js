@@ -206,6 +206,24 @@ var tests = [
     ],
     local: { foo:'Fubar!' },
     render: '<div id="Fubar!">bar</div>'
+  },
+  
+  {
+    source : '<?= foo // bar ?>',
+    parse : [
+      { type :'write', source:'<?= foo // bar ?>', script:' foo // bar ' }
+    ],
+    local : { foo : 'Fubar!' },
+    render : 'Fubar!'
+  },
+  
+  {
+    source : '<?= foo /* ?> */ ?>',
+    parse : [
+      { type :'write', source:'<?= foo /* ?> */ ?>', script:' foo /* ?> */ ' }
+    ],
+    local : { foo : 'Fubar!' },
+    render : 'Fubar!'
   }
 
 ];
