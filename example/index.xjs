@@ -1,5 +1,5 @@
 <?
-  var dir = local.dir ? dir : __dirname;
+  var dir = globals.dir ? dir : __dirname;
 ?>
 <html>
 <body>
