@@ -46,7 +46,7 @@ tests.forEach(function(test) {
   
   exports['render ' + test.filename] = function(assert) {
     var template = require(test.filename);
-    template.render(function(result) {
+    template(function(result) {
       assert.equal(test.render, result);
       assert.done();
     }, test.local);
