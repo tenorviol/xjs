@@ -1,3 +1,5 @@
+// simple tests to check that the parser can recognize javascript
+
 var util = require('util');
 var parser = require('../lib/parser');
 
