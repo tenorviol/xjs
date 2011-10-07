@@ -28,14 +28,14 @@ var tests = [
     filename: '../example/helloworld.xjs',
     render: '<html><head><title>Hello world!</title></head><body><h1>Hello world!</h1></body></html>'
   },
-
+/*
   {
     filename: '../example/index.xjs',
     local: { dir:__dirname },
     // NOTE: new dir files must accompany a change in the render
     render: '<html><body><ul><li>StringStream.test.js</li><li>xjs.test.js</li><li>xjsModules.test.js</li><li>XjsStream.test.js</li></ul></body></html>'
   },
-
+*/
   {
     filename: '../example/inlinejs.xjs',
     render: '<script type="text/javascript">\n(function() {\n  console.log(\'foo\');\n})();\n</script>'

@@ -106,7 +106,7 @@ var tests = [
     local: { func:function() { return very_secure_code; } },
     render: '[Function]'
   },
-/* TODO:
+/*
   // writing tags should just work
   {
     source: '<div><?= <span>Foo</span> ?></div>',
@@ -232,13 +232,27 @@ var tests = [
 tests.forEach(function(test) {
 
   exports['parse '+test.source] = function(assert) {
-    var result = parser.parse(test.source);
+    try {
+      var result = parser.parse(test.source);
+    } catch (e) {
+      console.log(e);
+      assert.ok(false);
+      assert.done();
+      return;
+    }
     assert.deepEqual(test.parse, result);
     assert.done();
   };
 
   exports['render ' + test.source] = function(assert) {
-    var template = xjs.parse(test.source);
+    try {
+      var template = xjs.parse(test.source);
+    } catch (e) {
+      console.log(e);
+      assert.ok(false);
+      assert.done();
+      return;
+    }
     template(function(result) {
       assert.equal(test.render, result);
       assert.done();
