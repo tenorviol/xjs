@@ -1,5 +1,7 @@
-xjs
+¡DEPRECATED! - xjs
 ===
+
+This library is no longer maintained. Please use [react.js](https://reactjs.org/).
 
 xml javascript templates for node.js
 
@@ -53,13 +55,13 @@ Examples
 ### Echo (html escaped)
 
     {{= 'Hello world! < J.R.R. Tolkein' }}
-    
+
     // Output: Hello world! &lt; J.R.R. Tolkein
 
 ### Tags
 
     <div id={foo} class="foo">{{= bar('Fubar!') }}</div>
-    
+
     // Output: <div id="value of foo" class="foo">return value of bar</div>
 
 ### Inline xj
@@ -75,7 +77,7 @@ Examples
       template.render(response);
     }}
     </div>
-    
+
     // Output 1: <div id="page"><div>value of foo</div></div>
     // Output 2: <div id="page"><div>bar</div></div>
 
@@ -86,7 +88,7 @@ Examples
       var q = { foo:'bar' };
     }}
     <a href={ '/link?' + QS.stringify(q) }>click me</a>
-    
+
     // Output: <a href="/link?foo=bar">click me</a>
 
 ### Script modification and output
@@ -96,7 +98,7 @@ Examples
       console.log({{= JSON.stringify(foo) }});
     // ]]>
     </script>
-    
+
     /* Output:
       <script>
       // <![CDATA[

@@ -1,8 +1,8 @@
 {
   "name" : "xjs",
-  "description" : "A templating language for node.js using xml and javascript",
+  "description" : "DEPRECATED! A templating language for node.js using xml and javascript",
   "keywords" : [ "template", "xml", "xhp" ],
-  "version" : "0.1.5",
+  "version" : "0.1.6",
   "author" : "Christopher Johnson",
   "engines" : { "node" : "0.4" },
   "main" : "lib/xjs.js",
